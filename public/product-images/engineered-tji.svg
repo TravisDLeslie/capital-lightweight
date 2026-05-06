@@ -1,0 +1,18 @@
+<svg width="900" height="560" viewBox="0 0 900 560" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="900" height="560" fill="#f5f5f4"/>
+  <path d="M138 318 640 132l128 54-505 188-125-56Z" fill="#d8b06a"/>
+  <path d="M263 374 768 186v58L263 432v-58Z" fill="#b9873f"/>
+  <path d="M138 318v58l125 56v-58l-125-56Z" fill="#9b6b32"/>
+  <path d="M279 251 595 134l62 26-316 118-62-27Z" fill="#f0cf88"/>
+  <path d="M344 291 660 173v162L344 452V291Z" fill="#c49a56"/>
+  <path d="M344 291 279 264v162l65 26V291Z" fill="#95652f"/>
+  <path d="M358 321 642 215v84L358 404v-83Z" fill="#e8d1a4"/>
+  <path d="M384 319 616 233" stroke="#8b5e34" stroke-width="8" stroke-linecap="round"/>
+  <path d="M384 351 616 265" stroke="#8b5e34" stroke-width="8" stroke-linecap="round"/>
+  <path d="M384 383 616 297" stroke="#8b5e34" stroke-width="8" stroke-linecap="round"/>
+  <path d="M138 318 640 132l128 54-505 188-125-56Z" stroke="#6b4a26" stroke-width="8" stroke-linejoin="round"/>
+  <path d="M263 374 768 186v58L263 432v-58Z" stroke="#6b4a26" stroke-width="8" stroke-linejoin="round"/>
+  <path d="M138 318v58l125 56v-58l-125-56Z" stroke="#6b4a26" stroke-width="8" stroke-linejoin="round"/>
+  <text x="88" y="96" fill="#1c1917" font-family="Arial, sans-serif" font-size="44" font-weight="800">TJI 110</text>
+  <text x="88" y="138" fill="#57534e" font-family="Arial, sans-serif" font-size="24" font-weight="700">Trus Joist I-Joist</text>
+</svg>
