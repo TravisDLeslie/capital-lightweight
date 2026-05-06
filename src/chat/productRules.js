@@ -86,6 +86,14 @@ export function getFoundReplyText(prompt, matchedProducts) {
       return `Yes, we carry ${product.name}. I pulled it up below so you can review the material, then we can confirm color, profile, length, and current pricing.`
     }
 
+    if (
+      product.category === 'Dimensional Lumber' &&
+      product.grade === '#1 DF-L' &&
+      product.name.toLowerCase().startsWith('2x4-')
+    ) {
+      return `Yes, we stock ${product.name}. We also stock other 2x4 #1 DF-L lengths such as 10', 12', 14', and 16', plus common NPS pre-cut studs.`
+    }
+
     return `Yes, we stock ${product.name}. It is ${product.grade}, currently showing ${product.stock} in stock at ${product.location}.`
   }
 

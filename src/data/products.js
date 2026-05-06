@@ -610,7 +610,7 @@ export const products = [
     unit: 'sheet',
     stock: 128,
     location: 'Warehouse Bay 6',
-    image: '/product-images/osb-sheathing.avif',
+    image: '/product-images/zip-716.avif',
     aliases: ['7/16 osb', 'osb', 'osb sheathing', '716 osb', '4x8 osb'],
   },
   {
@@ -627,7 +627,7 @@ export const products = [
     unit: 'sheet',
     stock: 76,
     location: 'Warehouse Bay 6',
-    image: '/product-images/osb-sheathing.avif',
+    image: '/product-images/zip-58.avif',
     aliases: ['19/32 osb', '1932 osb', 'osb 19/32', 'osb 1932'],
   },
   {
@@ -644,7 +644,7 @@ export const products = [
     unit: 'sheet',
     stock: 64,
     location: 'Warehouse Bay 6',
-    image: '/product-images/osb-sheathing.avif',
+    image: '/product-images/advantech.avif',
     aliases: ['5/8 osb', '58 osb', 'osb 5/8', 'osb 58'],
   },
   {
@@ -661,7 +661,7 @@ export const products = [
     unit: 'sheet',
     stock: 52,
     location: 'Warehouse Bay 7',
-    image: '/product-images/osb-sheathing.avif',
+    image: '/product-images/advantech.avif',
     aliases: ['3/4 t&g', '3/4 tg', '34 tg', '34 t&g', '3/4 osb t&g', '3/4 osb tg'],
   },
   {
@@ -700,7 +700,7 @@ export const products = [
   },
   {
     id: 'zip-716',
-    name: 'Zip System 7/16 Sheathing',
+    name: 'Zip 7/16 OSB Sheathing',
     category: 'Sheet Goods',
     dimensions: '7/16 in x 4 ft x 8 ft',
     grade: 'Structural Sheathing',
@@ -712,12 +712,12 @@ export const products = [
     unit: 'sheet',
     stock: 42,
     location: 'Warehouse Bay 8',
-    image: '/product-images/osb-sheathing.avif',
+    image: '/product-images/zip-716.avif',
     aliases: ['zip 7/16', 'zip 716', '7/16 zip', 'zip sheathing'],
   },
   {
     id: 'zip-58',
-    name: 'Zip System 5/8 Sheathing',
+    name: 'Zip 5/8 OSB Sheathing',
     category: 'Sheet Goods',
     dimensions: '5/8 in x 4 ft x 8 ft',
     grade: 'Structural Sheathing',
@@ -729,7 +729,7 @@ export const products = [
     unit: 'sheet',
     stock: 31,
     location: 'Warehouse Bay 8',
-    image: '/product-images/osb-sheathing.avif',
+    image: '/product-images/zip-58.avif',
     aliases: ['zip 5/8', 'zip 58', '5/8 zip'],
   },
   {
@@ -746,7 +746,7 @@ export const products = [
     unit: 'sheet',
     stock: 28,
     location: 'Warehouse Bay 9',
-    image: '/product-images/osb-sheathing.avif',
+    image: '/product-images/advantech.avif',
     aliases: ['advantech 3/4', 'advantech 34', 'advantech 3/4 t&g', 'advantech 34 tg'],
   },
   {
@@ -763,7 +763,7 @@ export const products = [
     unit: 'sheet',
     stock: 18,
     location: 'Warehouse Bay 9',
-    image: '/product-images/osb-sheathing.avif',
+    image: '/product-images/advantech.avif',
     aliases: ['advantech 7/8', 'advantech 78', 'advantech 7/8 t&g', 'advantech 78 tg'],
   },
   {
