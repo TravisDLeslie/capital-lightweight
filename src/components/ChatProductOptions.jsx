@@ -13,6 +13,7 @@ function getQuoteButtonLabel(lines) {
 function ChatProductOptions({
   products,
   onAddQuoteLines,
+  onMobileViewDetails,
   onSelect,
   quoteLines,
   showAllInitially = false,
@@ -86,16 +87,23 @@ function ChatProductOptions({
           const priceVerificationLabel = getPriceVerificationLabel(product)
 
           return (
-            <button
-            className="min-h-36 rounded-md border border-stone-200 bg-white p-3 text-left shadow-[0_1px_1px_rgb(0_0_0/0.03)] transition hover:border-stone-300 hover:bg-stone-50 focus:border-emerald-300 focus:outline-none focus:ring-4 focus:ring-emerald-50 sm:p-4"
+            <div
+            className="rounded-md border border-stone-200 bg-white p-3 text-left shadow-[0_1px_1px_rgb(0_0_0/0.03)] transition hover:border-stone-300 hover:bg-stone-50 focus:border-emerald-300 focus:outline-none focus:ring-4 focus:ring-emerald-50 sm:p-4"
             key={product.id}
             onClick={() => onSelect(product)}
-            type="button"
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault()
+                onSelect(product)
+              }
+            }}
+            role="button"
+            tabIndex={0}
           >
-            <div className="flex gap-3">
+            <div className="flex gap-3 md:hidden">
               <img
                 alt=""
-                className="h-14 w-14 shrink-0 rounded-md bg-stone-50 object-contain p-1 ring-1 ring-stone-100 sm:h-16 sm:w-16"
+                className="h-20 w-20 shrink-0 rounded-md bg-stone-50 object-contain p-1 ring-1 ring-stone-100"
                 src={product.image}
               />
               <div className="min-w-0 flex-1">
@@ -105,48 +113,110 @@ function ChatProductOptions({
                 <p className="mt-1 text-sm text-stone-600">
                   {availability.listText}
                 </p>
+                <p className="mt-2 text-lg font-black leading-none text-stone-950">
+                  {product.price
+                    ? `$${product.price.toFixed(2)}`
+                    : availability.priceFallback}
+                </p>
+                <p className="mt-1 text-[11px] font-semibold text-slate-500">
+                  {priceVerificationLabel}
+                </p>
                 {product.specSheet ? (
                   <p className="mt-2 inline-flex rounded bg-stone-100 px-2 py-1 text-[11px] font-bold text-stone-600">
                     Spec sheet available
                   </p>
                 ) : null}
               </div>
-            </div>
-            <div className="mt-4 border-t border-stone-100 pt-3">
-              <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-3">
-                <p className="text-base font-black text-stone-950">
-                  {product.price
-                    ? `$${product.price.toFixed(2)}`
-                    : availability.priceFallback}
-                </p>
-                <div className="flex shrink-0 items-center gap-2">
-                  <span
-                    className={`inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-xs font-bold ${
-                      availability.badgeClass
-                    }`}
-                  >
-                    <span className="relative flex h-2.5 w-2.5">
-                      <span
-                        className={`absolute inline-flex h-full w-full animate-ping rounded-full opacity-60 ${
-                          availability.pingClass
-                        }`}
-                      />
-                      <span
-                        className={`relative inline-flex h-2.5 w-2.5 rounded-full ${
-                          availability.dotClass
-                        }`}
-                      />
-                    </span>
-                    {availability.label}
+              <div className="flex shrink-0 flex-col items-end gap-3">
+                <span
+                  className={`inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-xs font-bold ${
+                    availability.badgeClass
+                  }`}
+                >
+                  <span className="relative flex h-2.5 w-2.5">
+                    <span
+                      className={`absolute inline-flex h-full w-full animate-ping rounded-full opacity-60 ${
+                        availability.pingClass
+                      }`}
+                    />
+                    <span
+                      className={`relative inline-flex h-2.5 w-2.5 rounded-full ${
+                        availability.dotClass
+                      }`}
+                    />
                   </span>
-                  <span className="text-2xl leading-none text-stone-300">›</span>
+                  {availability.label}
+                </span>
+                <button
+                  className="rounded-full border border-red-100 bg-red-50 px-3 py-1.5 text-xs font-black text-[#FC2C38] transition hover:border-[#FC2C38] hover:bg-white focus:outline-none focus:ring-4 focus:ring-red-100 md:hidden"
+                  onClick={(event) => {
+                    event.stopPropagation()
+                    onSelect(product)
+                    onMobileViewDetails()
+                  }}
+                  type="button"
+                >
+                  More details
+                </button>
+              </div>
+            </div>
+            <div className="hidden md:block">
+              <div className="flex gap-3">
+                <img
+                  alt=""
+                  className="h-16 w-16 shrink-0 rounded-md bg-stone-50 object-contain p-1 ring-1 ring-stone-100"
+                  src={product.image}
+                />
+                <div className="min-w-0 flex-1">
+                  <p className="line-clamp-2 font-bold leading-5 text-stone-950">
+                    {product.name}
+                  </p>
+                  <p className="mt-1 text-sm text-stone-600">
+                    {availability.listText}
+                  </p>
+                  {product.specSheet ? (
+                    <p className="mt-2 inline-flex rounded bg-stone-100 px-2 py-1 text-[11px] font-bold text-stone-600">
+                      Spec sheet available
+                    </p>
+                  ) : null}
                 </div>
               </div>
-              <p className="mt-2 text-[11px] font-semibold text-slate-500">
-                {priceVerificationLabel}
-              </p>
+              <div className="mt-4 border-t border-stone-100 pt-3">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <p className="text-base font-black text-stone-950">
+                    {product.price
+                      ? `$${product.price.toFixed(2)}`
+                      : availability.priceFallback}
+                  </p>
+                  <div className="flex shrink-0 items-center gap-2">
+                    <span
+                      className={`inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-xs font-bold ${
+                        availability.badgeClass
+                      }`}
+                    >
+                      <span className="relative flex h-2.5 w-2.5">
+                        <span
+                          className={`absolute inline-flex h-full w-full animate-ping rounded-full opacity-60 ${
+                            availability.pingClass
+                          }`}
+                        />
+                        <span
+                          className={`relative inline-flex h-2.5 w-2.5 rounded-full ${
+                            availability.dotClass
+                          }`}
+                        />
+                      </span>
+                      {availability.label}
+                    </span>
+                    <span className="text-2xl leading-none text-stone-300">›</span>
+                  </div>
+                </div>
+                <p className="mt-2 text-[11px] font-semibold text-slate-500">
+                  {priceVerificationLabel}
+                </p>
+              </div>
             </div>
-            </button>
+            </div>
           )
         })}
       </div>

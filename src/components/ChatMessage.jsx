@@ -53,6 +53,7 @@ function ChatMessage({
   onAddQuoteLines,
   onChoiceSelect,
   onDeliveryPromptSubmit,
+  onMobileViewDetails,
   onProductSelect,
 }) {
   const isCustomer = message.role === 'customer'
@@ -73,6 +74,7 @@ function ChatMessage({
         {isProductOptions ? (
           <ChatProductOptions
             onAddQuoteLines={onAddQuoteLines}
+            onMobileViewDetails={onMobileViewDetails}
             onSelect={onProductSelect}
             products={message.products}
             quoteLines={message.quoteLines}

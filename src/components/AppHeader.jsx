@@ -3,6 +3,7 @@ const directionsUrl =
 
 function AppHeader({
   catalogCount,
+  onMenuOpen,
   quoteAnimationKey,
   quoteCount,
   quoteSubtotal,
@@ -16,7 +17,46 @@ function AppHeader({
     .join(' ')
 
   return (
-    <section className="shrink-0 border-b border-stone-200 bg-white/95 shadow-sm backdrop-blur">
+    <>
+    <section className="shrink-0 border-b border-stone-200 bg-white/95 shadow-sm backdrop-blur md:hidden">
+      <div className="flex items-center justify-between gap-3 px-4 py-3">
+        <button
+          aria-label="Open menu"
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-stone-200 bg-stone-50 text-2xl font-bold leading-none text-stone-800 shadow-sm transition hover:bg-stone-100 focus:outline-none focus:ring-4 focus:ring-stone-100"
+          onClick={onMenuOpen}
+          type="button"
+        >
+          ≡
+        </button>
+        <div className="min-w-0 flex-1">
+          <button
+            className="flex max-w-full items-center gap-2 rounded-full border border-stone-200 bg-white px-3 py-2 text-left shadow-sm"
+            onClick={onMenuOpen}
+            type="button"
+          >
+            <img
+              alt=""
+              className="h-6 w-auto shrink-0"
+              src="/site-logo.svg"
+            />
+            <span className="truncate text-sm font-black text-stone-950">
+              Lumber Assistant
+            </span>
+          </button>
+        </div>
+        <button
+          className={`flex h-11 min-w-14 shrink-0 items-center justify-center rounded-full bg-[#FC2C38] px-3 text-xs font-black text-white shadow-sm transition focus:outline-none focus:ring-4 focus:ring-red-200 ${
+            quoteAnimationKey ? 'animate-quote-pop' : ''
+          }`}
+          onClick={onQuoteOpen}
+          type="button"
+        >
+          {quoteCount ? quoteCount : 'Quote'}
+        </button>
+      </div>
+    </section>
+
+    <section className="hidden shrink-0 border-b border-stone-200 bg-white/95 shadow-sm backdrop-blur md:block">
       <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-4 sm:px-5 xl:flex-row xl:items-center xl:justify-between xl:gap-6">
         <div className="flex min-w-0 flex-col items-center gap-3 text-center sm:flex-row sm:text-left">
           <img
@@ -117,6 +157,7 @@ function AppHeader({
         </div>
       </div>
     </section>
+    </>
   )
 }
 

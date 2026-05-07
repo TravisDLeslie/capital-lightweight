@@ -2,7 +2,12 @@ import { useState } from 'react'
 import { getAvailability } from '../utils/availability'
 import { getPriceVerificationLabel } from '../utils/priceVerification'
 
-function ProductCard({ onAddToQuote, product, quoteQuantity = 0 }) {
+function ProductCard({
+  onAddToQuote,
+  onDeliveryEstimate,
+  product,
+  quoteQuantity = 0,
+}) {
   const [isAddAnimating, setIsAddAnimating] = useState(false)
   const [isGradeOpen, setIsGradeOpen] = useState(false)
   const [isImageOpen, setIsImageOpen] = useState(false)
@@ -134,7 +139,7 @@ function ProductCard({ onAddToQuote, product, quoteQuantity = 0 }) {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <button
             className={`rounded-md bg-[#FC2C38] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#de1f2b] focus:outline-none focus:ring-4 focus:ring-red-200 ${
               isAddAnimating ? 'animate-quote-pop' : ''
@@ -154,6 +159,13 @@ function ProductCard({ onAddToQuote, product, quoteQuantity = 0 }) {
           >
             Call 208-343-5481
           </a>
+          <button
+            className="rounded-md border border-stone-300 px-4 py-2.5 text-center text-sm font-semibold text-stone-700 transition hover:border-stone-500 hover:bg-stone-50 hover:text-stone-950 focus:outline-none focus:ring-4 focus:ring-stone-100"
+            onClick={onDeliveryEstimate}
+            type="button"
+          >
+            Estimate delivery
+          </button>
         </div>
       </div>
       {isImageOpen ? (

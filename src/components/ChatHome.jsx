@@ -55,6 +55,9 @@ function ChatHome() {
   const [fenceCalculatorState, setFenceCalculatorState] = useState(null)
   const [isAwaitingDeliveryLocation, setIsAwaitingDeliveryLocation] =
     useState(false)
+  const [isDeliveryEstimatorOpen, setIsDeliveryEstimatorOpen] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isMobileProductOpen, setIsMobileProductOpen] = useState(false)
   const [isQuoteOpen, setIsQuoteOpen] = useState(false)
   const [quoteAnimationKey, setQuoteAnimationKey] = useState(null)
   const messagesEndRef = useRef(null)
@@ -363,6 +366,8 @@ function ChatHome() {
     setLastQuoteLines([])
     setFenceCalculatorState(null)
     setIsAwaitingDeliveryLocation(false)
+    setIsMobileProductOpen(false)
+    setIsMobileMenuOpen(false)
   }
 
   function selectSuggestedProduct(product) {
@@ -516,18 +521,19 @@ function ChatHome() {
   const quoteCount = quoteItems.reduce((total, item) => total + item.quantity, 0)
 
   return (
-    <main className="flex h-screen flex-col overflow-hidden bg-stone-50 text-stone-950">
+    <main className="flex h-screen flex-col overflow-hidden bg-white text-stone-950 md:bg-stone-50">
       <AppHeader
         catalogCount={catalogCount}
+        onMenuOpen={() => setIsMobileMenuOpen(true)}
         onQuoteOpen={() => setIsQuoteOpen(true)}
         quoteAnimationKey={quoteAnimationKey}
         quoteCount={quoteCount}
         quoteSubtotal={quoteSubtotal}
       />
 
-      <section className="mx-auto grid min-h-0 w-full max-w-7xl flex-1 gap-4 overflow-y-auto px-3 py-3 sm:gap-5 sm:px-5 sm:py-5 xl:grid-cols-[minmax(0,1.12fr)_minmax(340px,.88fr)] xl:overflow-hidden 2xl:grid-cols-[minmax(0,1.15fr)_minmax(360px,.85fr)]">
-        <div className="flex min-h-[520px] flex-col rounded-lg border border-stone-200 bg-white shadow-[0_1px_2px_rgb(0_0_0/0.04)] sm:min-h-[560px] xl:min-h-0">
-          <div className="flex shrink-0 flex-col gap-3 border-b border-stone-100 p-4 sm:flex-row sm:items-start sm:justify-between sm:gap-4 sm:p-5">
+      <section className="mx-auto grid min-h-0 w-full max-w-7xl flex-1 gap-0 overflow-hidden px-0 py-0 sm:gap-5 sm:px-5 sm:py-5 md:overflow-y-auto xl:grid-cols-[minmax(0,1.12fr)_minmax(340px,.88fr)] xl:overflow-hidden 2xl:grid-cols-[minmax(0,1.15fr)_minmax(360px,.85fr)]">
+        <div className="flex min-h-0 flex-col border-0 bg-white shadow-none sm:min-h-[560px] sm:rounded-lg sm:border sm:border-stone-200 sm:shadow-[0_1px_2px_rgb(0_0_0/0.04)] xl:min-h-0">
+          <div className="hidden shrink-0 flex-col gap-3 border-b border-stone-100 p-4 sm:flex sm:flex-row sm:items-start sm:justify-between sm:gap-4 sm:p-5">
             <div>
               <p className="text-xs font-bold uppercase tracking-wide text-stone-400">
                 Customer chat
@@ -545,7 +551,7 @@ function ChatHome() {
             </button>
           </div>
 
-          <div className="flex min-h-0 flex-1 flex-col p-4 sm:p-5">
+          <div className="flex min-h-0 flex-1 flex-col px-3 pt-3 sm:p-5">
             <div className="min-h-0 flex-1 space-y-3 overflow-y-auto pr-1 pb-5">
               {messages.map((message) => (
                 <ChatMessage
@@ -557,14 +563,32 @@ function ChatHome() {
                   }}
                   onChoiceSelect={submitPrompt}
                   onDeliveryPromptSubmit={submitPrompt}
+                  onMobileViewDetails={() => setIsMobileProductOpen(true)}
                   onProductSelect={selectSuggestedProduct}
                 />
               ))}
               <div ref={messagesEndRef} />
             </div>
 
-            <div className="sticky bottom-0 shrink-0 space-y-3 border-t border-stone-100 bg-white/95 pt-4 backdrop-blur">
-              <div className="flex items-center justify-between gap-3">
+            <div className="sticky bottom-0 shrink-0 space-y-3 border-t border-stone-100 bg-white/95 pb-3 pt-3 backdrop-blur sm:pb-0 sm:pt-4">
+              <div className="flex items-center justify-between gap-3 sm:hidden">
+                <div>
+                  <p className="text-[11px] font-black uppercase tracking-wide text-stone-400">
+                    Ask the lumber desk
+                  </p>
+                  <p className="text-xs font-semibold text-stone-600">
+                    Products, prices, delivery, or hours.
+                  </p>
+                </div>
+                <button
+                  className="shrink-0 rounded-full border border-stone-200 bg-white px-3 py-2 text-xs font-black text-stone-600 shadow-sm transition hover:border-[#FC2C38] hover:text-[#FC2C38] focus:outline-none focus:ring-4 focus:ring-stone-100"
+                  onClick={clearChat}
+                  type="button"
+                >
+                  Clear chat
+                </button>
+              </div>
+              <div className="hidden items-center justify-between gap-3 sm:flex">
                 <div>
                   <p className="text-xs font-bold uppercase tracking-wide text-stone-400">
                     Ask the lumber desk
@@ -578,18 +602,26 @@ function ChatHome() {
                 </span>
               </div>
               <form
-                className="flex gap-2 rounded-lg border border-stone-200 bg-stone-50 p-2 shadow-[0_1px_2px_rgb(0_0_0/0.04)] focus-within:border-stone-300 focus-within:ring-4 focus-within:ring-stone-100 sm:gap-3"
+                className="flex gap-2 rounded-full border border-stone-200 bg-stone-50 p-2 shadow-[0_1px_2px_rgb(0_0_0/0.04)] focus-within:border-stone-300 focus-within:ring-4 focus-within:ring-stone-100 sm:gap-3 sm:rounded-lg"
                 onSubmit={handleSubmit}
               >
+                <button
+                  aria-label="Open menu"
+                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-3xl font-light text-stone-600 transition hover:bg-stone-100 sm:hidden"
+                  onClick={() => setIsMobileMenuOpen(true)}
+                  type="button"
+                >
+                  +
+                </button>
                 <input
-                  className="min-w-0 flex-1 rounded-md border-0 bg-transparent px-2 py-2.5 text-base font-semibold outline-none placeholder:font-normal placeholder:text-stone-400 sm:px-3"
+                  className="min-w-0 flex-1 rounded-md border-0 bg-transparent px-1 py-2.5 text-base font-semibold outline-none placeholder:font-normal placeholder:text-stone-400 sm:px-3"
                   onChange={(event) => setInput(event.target.value)}
-                  placeholder="Ask about 2x4-8, SKU 894, Hardie, delivery..."
+                  placeholder="Ask Capital Lumber..."
                   type="text"
                   value={input}
                 />
                 <button
-                  className="shrink-0 rounded-md bg-[#FC2C38] px-4 py-2.5 text-sm font-black text-white transition hover:bg-[#de1f2b] focus:outline-none focus:ring-4 focus:ring-red-200 sm:px-5"
+                  className="h-11 shrink-0 rounded-full bg-[#FC2C38] px-4 text-sm font-black text-white transition hover:bg-[#de1f2b] focus:outline-none focus:ring-4 focus:ring-red-200 sm:h-auto sm:rounded-md sm:px-5 sm:py-2.5"
                   type="submit"
                 >
                   Ask
@@ -600,15 +632,15 @@ function ChatHome() {
           </div>
         </div>
 
-        <aside className="min-h-0 space-y-4 xl:overflow-y-auto xl:pr-1">
+        <aside className="hidden min-h-0 space-y-4 md:block xl:overflow-y-auto xl:pr-1">
           {selectedProduct ? (
             <>
               <ProductCard
                 onAddToQuote={addToQuote}
+                onDeliveryEstimate={() => setIsDeliveryEstimatorOpen(true)}
                 product={selectedProduct}
                 quoteQuantity={selectedQuoteQuantity}
               />
-              <DeliveryEstimator onAddDeliveryToQuote={addDeliveryToQuote} />
             </>
           ) : (
             <div className="rounded-lg border border-stone-200 bg-white p-6 shadow-sm">
@@ -621,6 +653,124 @@ function ChatHome() {
           )}
         </aside>
       </section>
+      {isMobileMenuOpen ? (
+        <div
+          className="fixed inset-0 z-50 bg-stone-950/45 md:hidden"
+          onClick={() => setIsMobileMenuOpen(false)}
+          role="presentation"
+        >
+          <div
+            className="h-full w-[88vw] max-w-sm overflow-y-auto bg-white p-4 shadow-2xl"
+            onClick={(event) => event.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+          >
+            <div className="flex items-center justify-between gap-3 border-b border-stone-100 pb-4">
+              <img alt="Capital Lumber Co" className="h-10 w-auto" src="/site-logo.svg" />
+              <button
+                className="rounded-full border border-stone-200 px-3 py-2 text-sm font-bold text-stone-600"
+                onClick={() => setIsMobileMenuOpen(false)}
+                type="button"
+              >
+                Close
+              </button>
+            </div>
+            <div className="mt-4 space-y-2">
+              <div className="rounded-full border border-red-100 bg-red-50 px-3 py-2 text-center text-sm font-black text-[#FC2C38] shadow-sm">
+                Boise's Specialty Lumber Yard
+              </div>
+              <div className="rounded-full border border-stone-200 bg-white px-3 py-2 text-center text-sm font-bold text-stone-700 shadow-sm">
+                <span className="text-[#FC2C38]">★★★★★</span>
+                <span className="ml-2">4.8 Google · 120+ reviews</span>
+              </div>
+            </div>
+            <div className="mt-5 space-y-2">
+              <button
+                className="flex w-full items-center justify-between rounded-lg bg-[#FC2C38] px-4 py-3 text-left text-sm font-black text-white shadow-sm transition hover:bg-[#de1f2b] focus:outline-none focus:ring-4 focus:ring-red-200"
+                onClick={() => {
+                  setIsMobileMenuOpen(false)
+                  setIsQuoteOpen(true)
+                }}
+                type="button"
+              >
+                <span>Quote</span>
+                <span>{quoteCount ? `${quoteCount} items` : 'Empty'}</span>
+              </button>
+              <button
+                className="flex w-full items-center justify-between rounded-lg border border-stone-200 bg-white px-4 py-3 text-left text-sm font-bold text-stone-800 shadow-sm transition hover:border-[#FC2C38] hover:bg-red-50 hover:text-[#FC2C38] focus:outline-none focus:ring-4 focus:ring-stone-100"
+                onClick={() => {
+                  setIsMobileMenuOpen(false)
+                  setIsDeliveryEstimatorOpen(true)
+                }}
+                type="button"
+              >
+                <span>Delivery</span>
+                <span className="text-stone-500">Estimate</span>
+              </button>
+              <a
+                className="flex w-full items-center justify-between rounded-lg border border-stone-200 bg-white px-4 py-3 text-sm font-bold text-stone-800 shadow-sm transition hover:border-[#FC2C38] hover:bg-red-50 hover:text-[#FC2C38] focus:outline-none focus:ring-4 focus:ring-stone-100"
+                href="tel:2083435481"
+              >
+                <span>Call</span>
+                <span>208-343-5481</span>
+              </a>
+            </div>
+            <div className="mt-4 rounded-lg bg-stone-50 p-3 text-sm font-semibold text-stone-700 ring-1 ring-stone-200">
+              <p>208-343-5481</p>
+              <p className="mt-1">M-F 7:30-5 · Sat 9-4</p>
+              <a
+                className="mt-2 inline-flex font-black text-[#FC2C38]"
+                href="https://www.google.com/maps/dir/?api=1&destination=Capital%20Lumber%20Co.%2C%203105%20W.%20State%20St.%20Boise%2C%20ID%2083703"
+                rel="noreferrer"
+                target="_blank"
+              >
+                Directions
+              </a>
+            </div>
+          </div>
+        </div>
+      ) : null}
+      {isMobileProductOpen && selectedProduct ? (
+        <div
+          className="fixed inset-0 z-50 flex items-end bg-stone-950/45 p-3 md:hidden"
+          onClick={() => setIsMobileProductOpen(false)}
+          role="presentation"
+        >
+          <div
+            className="max-h-[86vh] w-full overflow-y-auto rounded-2xl bg-white p-3 shadow-2xl"
+            onClick={(event) => event.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+          >
+            <div className="mb-3 flex items-center justify-between gap-3 px-1">
+              <div>
+                <p className="text-[11px] font-black uppercase tracking-wide text-stone-400">
+                  Product details
+                </p>
+                <p className="line-clamp-1 text-sm font-black text-stone-950">
+                  {selectedProduct.name}
+                </p>
+              </div>
+              <button
+                className="rounded-full border border-stone-200 bg-white px-3 py-2 text-xs font-black text-stone-600 shadow-sm transition hover:border-[#FC2C38] hover:text-[#FC2C38] focus:outline-none focus:ring-4 focus:ring-stone-100"
+                onClick={() => setIsMobileProductOpen(false)}
+                type="button"
+              >
+                Close
+              </button>
+            </div>
+            <ProductCard
+              onAddToQuote={addToQuote}
+              onDeliveryEstimate={() => {
+                setIsMobileProductOpen(false)
+                setIsDeliveryEstimatorOpen(true)
+              }}
+              product={selectedProduct}
+              quoteQuantity={selectedQuoteQuantity}
+            />
+          </div>
+        </div>
+      ) : null}
       <QuoteDrawer
         activeSectionId={activeQuoteSectionId}
         isOpen={isQuoteOpen}
@@ -638,6 +788,24 @@ function ChatHome() {
         sections={quoteSections}
         title={quoteTitle}
       />
+      {isDeliveryEstimatorOpen ? (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-stone-950/50 p-4"
+          onClick={() => setIsDeliveryEstimatorOpen(false)}
+          role="presentation"
+        >
+          <div
+            className="w-full max-w-lg"
+            onClick={(event) => event.stopPropagation()}
+            role="presentation"
+          >
+            <DeliveryEstimator
+              onAddDeliveryToQuote={addDeliveryToQuote}
+              onClose={() => setIsDeliveryEstimatorOpen(false)}
+            />
+          </div>
+        </div>
+      ) : null}
     </main>
   )
 }

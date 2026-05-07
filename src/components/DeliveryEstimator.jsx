@@ -6,7 +6,7 @@ import {
   primaryUnloadMethods,
 } from '../utils/deliveryPricing'
 
-function DeliveryEstimator({ onAddDeliveryToQuote }) {
+function DeliveryEstimator({ onAddDeliveryToQuote, onClose }) {
   const [zipCode, setZipCode] = useState('')
   const [method, setMethod] = useState('dumped')
   const [isExpanded, setIsExpanded] = useState(true)
@@ -34,6 +34,7 @@ function DeliveryEstimator({ onAddDeliveryToQuote }) {
       image: '/site-logo.svg',
       deliveryMethod: methodLabels[method],
     })
+    onClose?.()
   }
 
   function clearDeliveryEstimate() {
@@ -47,6 +48,9 @@ function DeliveryEstimator({ onAddDeliveryToQuote }) {
       <div className="flex items-start justify-between gap-4">
         <div>
           <h2 className="text-lg font-bold text-stone-950">Need delivery?</h2>
+          <p className="mt-1 text-sm text-stone-600">
+            Estimate dumped, forklift, or hand unload pricing.
+          </p>
         </div>
         <div className="flex items-center gap-2">
           {zipCode ? (
@@ -61,6 +65,15 @@ function DeliveryEstimator({ onAddDeliveryToQuote }) {
           <span className="rounded bg-stone-100 px-2 py-1 text-xs font-bold text-stone-600">
             Estimate
           </span>
+          {onClose ? (
+            <button
+              className="rounded px-2 py-1 text-xs font-bold text-stone-500 transition hover:bg-stone-100 hover:text-stone-950 focus:outline-none focus:ring-2 focus:ring-stone-100"
+              onClick={onClose}
+              type="button"
+            >
+              Close
+            </button>
+          ) : null}
         </div>
       </div>
 
