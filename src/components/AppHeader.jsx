@@ -10,17 +10,17 @@ function AppHeader({
 }) {
   return (
     <section className="shrink-0 border-b border-stone-200 bg-white">
-      <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-4 px-4 py-4 sm:px-5 sm:py-5 lg:grid-cols-[minmax(220px,1fr)_minmax(320px,1.2fr)_auto]">
-        <div className="min-w-0 text-center lg:text-left">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-3 px-4 py-3 sm:px-5 xl:grid-cols-[minmax(240px,1fr)_minmax(360px,1.1fr)_auto] xl:gap-6 xl:py-4">
+        <div className="min-w-0 text-center xl:text-left">
           <img
             alt="Capital Lumber Co"
-            className="mx-auto h-10 w-auto max-w-[240px] sm:h-12 sm:max-w-[320px] lg:mx-0"
+            className="mx-auto h-8 w-auto max-w-[220px] sm:h-10 sm:max-w-[280px] xl:mx-0 xl:h-11 xl:max-w-[300px]"
             src="/site-logo.svg"
           />
-          <h1 className="mt-3 text-sm font-black sm:text-sm">
+          <h1 className="mt-2 text-xs font-black sm:text-sm">
             The Highest Quality Lumber & Building Materials
           </h1>
-          <h2 className="mt-3 text-sm font-bold sm:text-sm">
+          <h2 className="mt-1 text-xs font-bold text-stone-700 sm:text-sm">
             Truck and Trailer Drive Through Yard!
           </h2>
         </div>
@@ -70,7 +70,7 @@ function AppHeader({
             </p>
           </div>
 
-          <div className="justify-self-center text-center lg:justify-self-end lg:text-right">
+          <div className="justify-self-center text-center xl:justify-self-end xl:text-right">
             <p className="mb-1 hidden text-xs font-semibold text-stone-500 sm:block">
               {catalogCount} items stocked
             </p>

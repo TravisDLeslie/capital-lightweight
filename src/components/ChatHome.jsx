@@ -442,8 +442,8 @@ function ChatHome() {
         quoteSubtotal={quoteSubtotal}
       />
 
-      <section className="mx-auto grid min-h-0 w-full max-w-7xl flex-1 gap-4 overflow-y-auto px-3 py-3 sm:gap-6 sm:px-5 sm:py-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(340px,.85fr)] lg:overflow-hidden xl:grid-cols-[minmax(0,1.15fr)_minmax(360px,.85fr)]">
-        <div className="flex min-h-[520px] flex-col rounded-lg border border-stone-200 bg-stone-50 shadow-sm sm:min-h-[560px] lg:min-h-0">
+      <section className="mx-auto grid min-h-0 w-full max-w-7xl flex-1 gap-4 overflow-y-auto px-3 py-3 sm:gap-5 sm:px-5 sm:py-5 xl:grid-cols-[minmax(0,1.12fr)_minmax(340px,.88fr)] xl:overflow-hidden 2xl:grid-cols-[minmax(0,1.15fr)_minmax(360px,.85fr)]">
+        <div className="flex min-h-[520px] flex-col rounded-lg border border-stone-200 bg-stone-50 shadow-sm sm:min-h-[560px] xl:min-h-0">
           <div className="flex shrink-0 flex-col gap-3 border-b border-stone-200 p-4 sm:flex-row sm:items-start sm:justify-between sm:gap-4 sm:p-5">
             <div>
               <p className="text-sm font-semibold uppercase tracking-wide text-stone-500">
@@ -499,7 +499,7 @@ function ChatHome() {
           </div>
         </div>
 
-        <aside className="min-h-0 space-y-4 lg:overflow-y-auto lg:pr-1">
+        <aside className="min-h-0 space-y-4 xl:overflow-y-auto xl:pr-1">
           {selectedProduct ? (
             <>
               <ProductCard
