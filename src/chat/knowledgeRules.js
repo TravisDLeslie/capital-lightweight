@@ -63,22 +63,18 @@ const knowledgeRules = [
     },
   },
   {
-    id: 'select-structural-vs-number-two',
+    id: 'select-structural',
     matches(normalizedPrompt) {
       return (
-        (normalizedPrompt.includes('selectstruct') ||
-          normalizedPrompt.includes('selectstructural')) &&
-        (normalizedPrompt.includes('2') ||
-          normalizedPrompt.includes('number2') ||
-          normalizedPrompt.includes('no2') ||
-          normalizedPrompt.includes('difference') ||
-          normalizedPrompt.includes('vs'))
+        normalizedPrompt.includes('selectstruct') ||
+        normalizedPrompt.includes('selectstructural') ||
+        normalizedPrompt.includes('selectgrade')
       )
     },
     getReply(products) {
       return {
         products: getProductsByGrade(products, 'Select Structural').slice(0, 6),
-        text: 'Select Structural is a higher structural lumber grade than #2. It is selected for stronger, cleaner pieces with tighter limits on defects, so it is used when the design calls for higher structural capacity or a better piece of lumber. #2 is a common framing grade and works for many normal framing uses, but it allows more knots, wane, and visual defects than Select Structural. We stock several Select Structural Fir sizes.',
+        text: 'Select Structural, often shortened to Select Struct, is a higher structural lumber grade than common #2 framing lumber. It has tighter limits on knots, wane, slope of grain, and other strength-reducing characteristics, so it is used when the plans call for stronger design values or when the customer wants a cleaner, better structural board. #2 & Better Fir KD is still a practical everyday framing choice, but Select Struct is the one to use when strength, straightness, or the spec matters more than the lowest piece price. We stock Select Structural Fir options and can help match the size to the plan.',
       }
     },
   },

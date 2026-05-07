@@ -10,20 +10,39 @@ function AppHeader({
 }) {
   return (
     <section className="shrink-0 border-b border-stone-200 bg-white">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-5 py-5">
-        <div className="min-w-0">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-4 px-5 py-5 lg:grid-cols-[minmax(220px,1fr)_minmax(320px,1.2fr)_auto]">
+        <div className="min-w-0 text-center lg:text-left">
           <img
             alt="Capital Lumber Co"
-            className="h-10 w-auto max-w-[240px] sm:h-12 sm:max-w-[320px]"
+            className="mx-auto h-10 w-auto max-w-[240px] sm:h-12 sm:max-w-[320px] lg:mx-0"
             src="/site-logo.svg"
           />
-          <h1 className="mt-3 text-lg font-black sm:text-3xl">
-            Product answers at the counter speed.
+          <h1 className="mt-3 text-sm font-black sm:text-sm">
+            The Highest Quality Lumber & Building Materials
           </h1>
+          <h2 className="mt-3 text-sm font-bold sm:text-sm">
+            Truck and Trailer Drive Through Yard!
+          </h2>
         </div>
 
-        <div className="flex shrink-0 items-center gap-4">
-          <div className="hidden text-right text-sm xl:block">
+        <div className="contents">
+          <div className="text-center text-sm">
+            <div className="group relative mb-2 inline-flex">
+              <button
+                className="rounded-full border border-red-100 bg-red-50 px-3 py-1 text-xs font-black text-[#FC2C38] shadow-sm transition hover:border-[#FC2C38] hover:bg-white focus:outline-none focus:ring-4 focus:ring-red-100"
+                type="button"
+              >
+                Boise's Specialty Lumber Yard
+              </button>
+              <div className="pointer-events-none absolute left-1/2 top-full z-20 mt-2 w-72 -translate-x-1/2 rounded-lg border border-stone-200 bg-white p-4 text-left text-xs text-stone-600 opacity-0 shadow-xl transition group-hover:opacity-100 group-focus-within:opacity-100">
+                <p className="font-bold text-stone-950">
+                  We go the extra mile to find the material you need.
+                </p>
+                <p className="mt-2 leading-relaxed">
+                  Fire rated? Check. Custom ran siding? Check. Specialty lumber, decking, beams, and oddball asks? We will help track it down.
+                </p>
+              </div>
+            </div>
             <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-stone-100 px-3 py-1 text-xs font-bold text-stone-700">
               <span className="text-[#FC2C38]">★★★★★</span>
               <span>4.8 Google rating</span>
@@ -51,7 +70,7 @@ function AppHeader({
             </p>
           </div>
 
-          <div className="text-right">
+          <div className="justify-self-center text-center lg:justify-self-end lg:text-right">
             <p className="mb-1 hidden text-xs font-semibold text-stone-500 sm:block">
               {catalogCount} items stocked
             </p>

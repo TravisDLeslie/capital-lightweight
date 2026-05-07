@@ -28,7 +28,12 @@ const suggestedPrompts = [
 const replyCharacterDelay = 18
 const productRevealDelay = 450
 const defaultProduct =
-  products.find((product) => product.id === 'dfl-2x4x8') || products[0]
+  products.find(
+    (product) =>
+      product.id === '01' ||
+      product.name === '2x4-8 #1 DF-L' ||
+      product.aliases?.includes('2x4-8'),
+  ) || products[0]
 const defaultQuoteSection = { id: 'general', name: 'General Materials' }
 
 function ChatHome() {
