@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 140" role="img" aria-labelledby="title">
+  <title id="title">Fir fence runners</title>
+  <rect width="240" height="140" rx="12" fill="#f8f7f4"/>
+  <g transform="translate(26 24)">
+    <rect x="18" y="24" width="150" height="17" rx="5" fill="#e9c98e" stroke="#a97838" stroke-width="3"/>
+    <rect x="18" y="60" width="150" height="17" rx="5" fill="#efcf95" stroke="#a97838" stroke-width="3"/>
+    <rect x="18" y="96" width="150" height="17" rx="5" fill="#e9c98e" stroke="#a97838" stroke-width="3"/>
+    <path d="M32 33c22-7 41 7 64 0s45-2 61 0M36 69c28-7 50 5 79 0" stroke="#9a6a37" stroke-width="2" opacity=".35"/>
+  </g>
+</svg>

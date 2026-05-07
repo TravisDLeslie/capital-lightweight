@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 140" role="img" aria-labelledby="title">
+  <title id="title">Fence runners</title>
+  <rect width="240" height="140" rx="12" fill="#f8f7f4"/>
+  <g transform="translate(28 24)">
+    <rect x="8" y="6" width="18" height="96" rx="3" fill="#8b5a2b"/>
+    <rect x="158" y="6" width="18" height="96" rx="3" fill="#8b5a2b"/>
+    <rect x="26" y="20" width="132" height="13" rx="4" fill="#e4bd7b" stroke="#9a6a37" stroke-width="3"/>
+    <rect x="26" y="48" width="132" height="13" rx="4" fill="#e4bd7b" stroke="#9a6a37" stroke-width="3"/>
+    <rect x="26" y="76" width="132" height="13" rx="4" fill="#e4bd7b" stroke="#9a6a37" stroke-width="3"/>
+    <circle cx="35" cy="26" r="4" fill="#6d6a63"/>
+    <circle cx="149" cy="26" r="4" fill="#6d6a63"/>
+    <circle cx="35" cy="54" r="4" fill="#6d6a63"/>
+    <circle cx="149" cy="54" r="4" fill="#6d6a63"/>
+    <circle cx="35" cy="82" r="4" fill="#6d6a63"/>
+    <circle cx="149" cy="82" r="4" fill="#6d6a63"/>
+  </g>
+</svg>

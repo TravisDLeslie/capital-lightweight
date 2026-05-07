@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 140" role="img" aria-labelledby="title">
+  <title id="title">Pressure treated fence posts</title>
+  <rect width="240" height="140" rx="12" fill="#f8f7f4"/>
+  <g transform="translate(31 18)">
+    <rect x="8" y="9" width="24" height="104" rx="3" fill="#6f8a5a" stroke="#415c35" stroke-width="3"/>
+    <rect x="145" y="9" width="24" height="104" rx="3" fill="#789660" stroke="#415c35" stroke-width="3"/>
+    <path d="M15 21c8 11 8 27 0 42M153 24c8 10 8 25 0 38" stroke="#36512f" stroke-width="2" opacity=".45"/>
+    <rect x="32" y="42" width="113" height="12" rx="3" fill="#93a777"/>
+    <rect x="32" y="78" width="113" height="12" rx="3" fill="#93a777"/>
+  </g>
+</svg>

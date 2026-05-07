@@ -1,4 +1,12 @@
 import { normalizeQuery } from '../utils/productSearch.js'
+import {
+  findDeliveryCity,
+  findDeliveryZip,
+  getDeliveryCityEstimate,
+  getFreeStandardDeliveryNote,
+  getDeliveryPriceText,
+  getDeliveryZone,
+} from '../utils/deliveryPricing.js'
 
 const weekdayOpenMinutes = 7 * 60 + 30
 const weekdayCloseMinutes = 17 * 60
@@ -59,6 +67,53 @@ function getNextOpenText(date) {
 
 export function getGeneralQuestionReply(prompt, now = new Date()) {
   const normalizedPrompt = normalizeQuery(prompt)
+  const isDeliveryQuestion = [
+    'delivery',
+    'deliver',
+    'delvier',
+    'delivered',
+    'dump',
+    'dumped',
+    'forklift',
+    'unload',
+    'handunload',
+  ].some((term) => normalizedPrompt.includes(term))
+
+  if (isDeliveryQuestion) {
+    const deliveryZip = findDeliveryZip(prompt)
+    const deliveryZone = deliveryZip ? getDeliveryZone(deliveryZip) : null
+
+    if (deliveryZone) {
+      const freeDeliveryNote = getFreeStandardDeliveryNote(deliveryZip)
+
+      return {
+        text: `Yes, we deliver to ${deliveryZone.city} ${deliveryZip}, ${getDeliveryPriceText(deliveryZone)} ${freeDeliveryNote ? `${freeDeliveryNote} ` : ''}If you want, we can add delivery to the quote once you pick the unload method.`,
+      }
+    }
+
+    const deliveryCity = findDeliveryCity(prompt, normalizeQuery)
+    const cityEstimate = deliveryCity
+      ? getDeliveryCityEstimate(deliveryCity.name)
+      : null
+
+    if (cityEstimate) {
+      return {
+        text: `Yes, we deliver to ${deliveryCity.name}, ${getDeliveryPriceText(cityEstimate)} Exact price can depend on the job ZIP, but that gives you the starting point before any item is selected.`,
+      }
+    }
+
+    if (deliveryZip) {
+      return {
+        text: `I do not have ${deliveryZip} in the delivery table yet. We can still check it at the counter, or you can call 208-343-5481 and we can confirm the delivery price.`,
+      }
+    }
+
+    return {
+      text: 'Yes, we deliver. Send the job ZIP or city and I can give you dumped, forklift unload, and hand-unload pricing before you even pick an item.',
+      deliveryPrompt: true,
+    }
+  }
+
   const isAboutQuestion = [
     'aboutus',
     'ourstory',

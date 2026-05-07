@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img" aria-labelledby="title desc">
+  <title id="title">Holdown and tension tie connector</title>
+  <desc id="desc">Illustration of galvanized Simpson-style holdown and tension tie hardware.</desc>
+  <rect width="320" height="240" fill="#f8f7f4"/>
+  <g transform="translate(82 30)">
+    <path d="M68 12h74c12 0 22 10 22 22v108c0 12-10 22-22 22H68c-12 0-22-10-22-22V34c0-12 10-22 22-22Z" fill="#d9dde0" stroke="#8b9198" stroke-width="5"/>
+    <path d="M84 18h44v150H84z" fill="#f1f3f4" opacity=".8"/>
+    <circle cx="76" cy="44" r="12" fill="#fff" stroke="#8b9198" stroke-width="5"/>
+    <circle cx="134" cy="44" r="12" fill="#fff" stroke="#8b9198" stroke-width="5"/>
+    <circle cx="76" cy="84" r="12" fill="#fff" stroke="#8b9198" stroke-width="5"/>
+    <circle cx="134" cy="84" r="12" fill="#fff" stroke="#8b9198" stroke-width="5"/>
+    <circle cx="76" cy="124" r="12" fill="#fff" stroke="#8b9198" stroke-width="5"/>
+    <circle cx="134" cy="124" r="12" fill="#fff" stroke="#8b9198" stroke-width="5"/>
+    <path d="M38 164h134l-18 34H56z" fill="#c5cad0" stroke="#8b9198" stroke-width="5" stroke-linejoin="round"/>
+    <ellipse cx="105" cy="181" rx="23" ry="12" fill="#fff" stroke="#8b9198" stroke-width="5"/>
+  </g>
+  <path d="M46 207h228" stroke="#d8d3cb" stroke-width="6" stroke-linecap="round"/>
+</svg>

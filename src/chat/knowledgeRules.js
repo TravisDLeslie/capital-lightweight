@@ -121,6 +121,26 @@ const knowledgeRules = [
     },
   },
   {
+    id: 'hardie-allura-siding',
+    matches(normalizedPrompt) {
+      return (
+        normalizedPrompt.includes('hardie') ||
+        normalizedPrompt.includes('jameshardie') ||
+        normalizedPrompt.includes('fibercement') ||
+        normalizedPrompt.includes('cementsiding')
+      )
+    },
+    getReply(products) {
+      return {
+        products: products.filter((product) => {
+          const normalizedName = normalizeQuery(product.name)
+          return normalizedName.includes('allura') || normalizedName.includes('fibercement')
+        }),
+        text: 'We can usually get Hardie same day or within 1 day, depending on profile and availability. We stock Allura, which is a fiber cement siding product in the same general category as Hardie, so it is a strong in-stock option when you need fiber cement siding quickly. We also have 3/4 in and true 1 in trim options in both textured and smooth finishes.',
+      }
+    },
+  },
+  {
     id: 'decking-materials',
     matches(normalizedPrompt) {
       const mentionsSpecificDeckingLine =

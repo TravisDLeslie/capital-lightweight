@@ -1,6 +1,22 @@
+import ChatChoicePrompt from './ChatChoicePrompt'
+import ChatDeliveryPrompt from './ChatDeliveryPrompt'
 import ChatProductOptions from './ChatProductOptions'
 
 function renderMessageText(text, shouldHighlightPrice) {
+  if (text.includes('**')) {
+    return text.split(/(\*\*[^*]+\*\*)/g).map((segment, index) => {
+      if (segment.startsWith('**') && segment.endsWith('**')) {
+        return (
+          <strong className="font-black text-stone-950" key={`${segment}-${index}`}>
+            {segment.slice(2, -2)}
+          </strong>
+        )
+      }
+
+      return segment
+    })
+  }
+
   if (!shouldHighlightPrice) {
     return text
   }
@@ -32,7 +48,13 @@ function getQuoteButtonLabel(lines) {
   return lines.length > 1 ? 'Add all to quote' : 'Add to quote'
 }
 
-function ChatMessage({ message, onAddQuoteLines, onProductSelect }) {
+function ChatMessage({
+  message,
+  onAddQuoteLines,
+  onChoiceSelect,
+  onDeliveryPromptSubmit,
+  onProductSelect,
+}) {
   const isCustomer = message.role === 'customer'
   const isProductOptions = message.type === 'product-options'
   const quoteButtonLabel = getQuoteButtonLabel(message.quoteLines)
@@ -50,8 +72,10 @@ function ChatMessage({ message, onAddQuoteLines, onProductSelect }) {
       >
         {isProductOptions ? (
           <ChatProductOptions
+            onAddQuoteLines={onAddQuoteLines}
             onSelect={onProductSelect}
             products={message.products}
+            quoteLines={message.quoteLines}
             showAllInitially={message.showAllInitially}
           />
         ) : (
@@ -73,6 +97,15 @@ function ChatMessage({ message, onAddQuoteLines, onProductSelect }) {
               >
                 {message.link.label}
               </a>
+            ) : null}
+            {message.deliveryPrompt ? (
+              <ChatDeliveryPrompt onSubmit={onDeliveryPromptSubmit} />
+            ) : null}
+            {message.fenceChoices ? (
+              <ChatChoicePrompt
+                choices={message.fenceChoices}
+                onSelect={onChoiceSelect}
+              />
             ) : null}
             {quoteButtonLabel ? (
               <button

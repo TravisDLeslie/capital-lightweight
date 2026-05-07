@@ -12,6 +12,11 @@ export function normalizeQuery(value) {
     normalized = normalized.replaceAll(word, number)
   })
 
+  normalized = normalized
+    .replace(/tounge\s*(?:and|&)\s*groove/g, 'tg')
+    .replace(/tongue\s*(?:and|&)\s*groove/g, 'tg')
+    .replace(/t\s*&\s*g/g, 'tg')
+
   return normalized
     .replace(/\bby\b/g, 'x')
     .replace(/\s+/g, '')
@@ -80,6 +85,34 @@ export function findProductMatches(query, products) {
     'joisthangers',
     'structuralhardware',
   ]
+  const broadHoldownTerms = [
+    'holdown',
+    'holdowns',
+    'holddown',
+    'holddowns',
+    'holddownsandtensionties',
+    'hdue',
+    'hdu',
+    'htt',
+    'htth',
+    'dtt',
+    'ltt',
+    'lttp',
+    'sthd',
+    'lsthd',
+    'holdownandtensiontie',
+    'holdownsandtensionties',
+    'hold down',
+    'hold downs',
+    'tensiontie',
+    'tensionties',
+    'tensionties',
+    'decktensiontie',
+    'strap tie',
+    'straptie',
+    'purlinanchor',
+    'purlinanchors',
+  ]
   const broadEngineeredTerms = [
     'tji',
     'tji110',
@@ -108,6 +141,7 @@ export function findProductMatches(query, products) {
   const broadTerms = [
     ...broadSheetGoodsTerms,
     ...broadHardwareTerms,
+    ...broadHoldownTerms,
     ...broadEngineeredTerms,
     ...broadBeamTerms,
     ...broadDeckingTerms,
@@ -116,6 +150,49 @@ export function findProductMatches(query, products) {
   const isBroadHardwareQuery = broadHardwareTerms.some((term) =>
     normalizedQuery.includes(term),
   )
+  const isBroadHoldownQuery = broadHoldownTerms.some((term) =>
+    normalizedQuery.includes(term),
+  )
+
+  if (isBroadHoldownQuery) {
+    const genericHoldownAliases = new Set([
+      ...broadHoldownTerms.map((term) => normalizeQuery(term)),
+      'simpsonholdown',
+      'simpsonholddown',
+      'simpsontensiontie',
+      'loadpathconnector',
+    ])
+    const exactHoldownMatches = products.flatMap((product) => {
+      if (product.category !== 'Holdowns & Tension Ties') {
+        return []
+      }
+
+      return product.aliases
+        .map((alias) => ({
+          product,
+          normalizedAlias: normalizeQuery(alias),
+        }))
+        .filter(({ normalizedAlias }) => {
+          return (
+            !genericHoldownAliases.has(normalizedAlias) &&
+            normalizedQuery.includes(normalizedAlias)
+          )
+        })
+    })
+
+    exactHoldownMatches.sort(
+      (first, second) =>
+        second.normalizedAlias.length - first.normalizedAlias.length,
+    )
+
+    const exactHoldownProduct = exactHoldownMatches[0]?.product
+
+    if (exactHoldownProduct) {
+      return [exactHoldownProduct]
+    }
+
+    return products.filter((product) => product.category === 'Holdowns & Tension Ties')
+  }
 
   if (isBroadHardwareQuery) {
     const exactHardwareMatches = products.flatMap((product) => {

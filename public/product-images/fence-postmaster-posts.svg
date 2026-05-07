@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 140" role="img" aria-labelledby="title">
+  <title id="title">PostMaster fence posts</title>
+  <rect width="240" height="140" rx="12" fill="#f8f7f4"/>
+  <g transform="translate(31 18)">
+    <path d="M10 9h24v104H10zM18 9v104" fill="#cbd1d6" stroke="#737d86" stroke-width="3"/>
+    <path d="M147 9h24v104h-24zM155 9v104" fill="#d7dce0" stroke="#737d86" stroke-width="3"/>
+    <rect x="34" y="42" width="113" height="12" rx="3" fill="#d8a45f"/>
+    <rect x="34" y="78" width="113" height="12" rx="3" fill="#d8a45f"/>
+    <rect x="30" y="38" width="10" height="20" rx="2" fill="#929ba3"/>
+    <rect x="141" y="38" width="10" height="20" rx="2" fill="#929ba3"/>
+    <rect x="30" y="74" width="10" height="20" rx="2" fill="#929ba3"/>
+    <rect x="141" y="74" width="10" height="20" rx="2" fill="#929ba3"/>
+  </g>
+</svg>

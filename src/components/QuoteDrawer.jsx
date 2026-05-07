@@ -15,6 +15,7 @@ function QuoteDrawer({
   onAnalyticsEvent,
   onActiveSectionChange,
   onChangeItemSection,
+  onClearQuote,
   onClose,
   onDecrease,
   onIncrease,
@@ -24,6 +25,7 @@ function QuoteDrawer({
   title,
 }) {
   const [sectionName, setSectionName] = useState('')
+  const [isConfirmingClear, setIsConfirmingClear] = useState(false)
   const subtotal = getQuoteSubtotal(items)
   const salesTax = getQuoteTax(subtotal)
   const total = getQuoteTotal(subtotal)
@@ -53,6 +55,23 @@ function QuoteDrawer({
     await downloadMaterialListPdf(items, sections, title)
   }
 
+  function handleClearQuote() {
+    if (!isConfirmingClear) {
+      setIsConfirmingClear(true)
+      return
+    }
+
+    onAnalyticsEvent({
+      eventType: 'clear_quote',
+      matchedProducts: items.map((item) => `${item.quantity} ${item.product.name}`),
+      quoteTitle: title,
+      quoteTotal: total,
+    })
+    onClearQuote()
+    setSectionName('')
+    setIsConfirmingClear(false)
+  }
+
   if (!isOpen) {
     return null
   }
@@ -69,13 +88,29 @@ function QuoteDrawer({
                 : 'No items added yet'}
             </p>
           </div>
-          <button
-            className="rounded-md border border-stone-300 px-3 py-2 text-sm font-semibold text-stone-700 transition hover:border-[#FC2C38] hover:bg-red-50 hover:text-[#FC2C38] focus:outline-none focus:ring-4 focus:ring-red-100"
-            onClick={onClose}
-            type="button"
-          >
-            Close
-          </button>
+          <div className="flex items-center gap-2">
+            {items.length ? (
+              <button
+                className={`rounded-md border px-3 py-2 text-sm font-semibold transition focus:outline-none focus:ring-4 focus:ring-red-100 ${
+                  isConfirmingClear
+                    ? 'border-[#FC2C38] bg-red-50 text-[#FC2C38]'
+                    : 'border-stone-300 text-stone-600 hover:border-[#FC2C38] hover:bg-red-50 hover:text-[#FC2C38]'
+                }`}
+                onBlur={() => setIsConfirmingClear(false)}
+                onClick={handleClearQuote}
+                type="button"
+              >
+                {isConfirmingClear ? 'Confirm clear' : 'Clear quote'}
+              </button>
+            ) : null}
+            <button
+              className="rounded-md border border-stone-300 px-3 py-2 text-sm font-semibold text-stone-700 transition hover:border-[#FC2C38] hover:bg-red-50 hover:text-[#FC2C38] focus:outline-none focus:ring-4 focus:ring-red-100"
+              onClick={onClose}
+              type="button"
+            >
+              Close
+            </button>
+          </div>
         </div>
 
         <div className="min-h-0 flex-1 overflow-y-auto p-5">

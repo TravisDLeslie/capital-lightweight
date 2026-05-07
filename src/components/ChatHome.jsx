@@ -5,6 +5,11 @@ import DeliveryEstimator from './DeliveryEstimator'
 import ProductCard from './ProductCard'
 import QuoteDrawer from './QuoteDrawer'
 import SuggestedPrompts from './SuggestedPrompts'
+import {
+  continueFenceCalculator,
+  isFenceCalculatorStart,
+  startFenceCalculator,
+} from '../chat/fenceCalculator'
 import { getChatReply } from '../chat/replyEngine'
 import { products } from '../data/products'
 import { getQuoteSubtotal } from '../utils/quoteTotals'
@@ -47,6 +52,9 @@ function ChatHome() {
     defaultQuoteSection.id,
   )
   const [lastQuoteLines, setLastQuoteLines] = useState([])
+  const [fenceCalculatorState, setFenceCalculatorState] = useState(null)
+  const [isAwaitingDeliveryLocation, setIsAwaitingDeliveryLocation] =
+    useState(false)
   const [isQuoteOpen, setIsQuoteOpen] = useState(false)
   const [quoteAnimationKey, setQuoteAnimationKey] = useState(null)
   const messagesEndRef = useRef(null)
@@ -123,6 +131,31 @@ function ChatHome() {
     )
   }
 
+  function shouldUseDeliveryFollowUp(prompt) {
+    const cleanLocation = prompt.trim().toLowerCase()
+
+    return (
+      isAwaitingDeliveryLocation &&
+      (/^\d{5}$/.test(cleanLocation) ||
+        [
+          'boise',
+          'meridian',
+          'kuna',
+          'kunda',
+          'nampa',
+          'caldwell',
+          'star',
+          'eagle',
+          'middleton',
+          'garden valley',
+          'idaho city',
+          'mccall',
+          'donnelly',
+          'cascade',
+        ].includes(cleanLocation))
+    )
+  }
+
   function addQuoteLinesToQuote(lines) {
     setQuoteAnimationKey(crypto.randomUUID())
     trackSessionEvent({
@@ -165,6 +198,54 @@ function ChatHome() {
     return lines
       .map((line) => `${line.quantity} ${line.product.unit} of ${line.product.name}`)
       .join(', ')
+  }
+
+  function showAssistantReply(nextMessages, reply, nextFenceState) {
+    const replyMessageId = crypto.randomUUID()
+
+    setSelectedProduct(reply.selectedProduct)
+    setLastQuoteLines(reply.quoteLines || [])
+    setMessages([
+      ...nextMessages,
+      {
+        id: replyMessageId,
+        role: 'assistant',
+        deliveryPrompt: reply.deliveryPrompt,
+        fenceChoices: reply.fenceChoices,
+        image: reply.image,
+        link: reply.link,
+        quoteLines: [],
+        text: '',
+      },
+    ])
+    revealReplyText(replyMessageId, reply.text, () => {
+      if (reply.quoteLines?.length) {
+        setMessages((currentMessages) =>
+          currentMessages.map((message) =>
+            message.id === replyMessageId
+              ? { ...message, quoteLines: reply.quoteLines }
+              : message,
+          ),
+        )
+      }
+
+      if (reply.products.length) {
+        setMessages((currentMessages) => [
+          ...currentMessages,
+          {
+            id: crypto.randomUUID(),
+            role: 'assistant',
+            type: 'product-options',
+            products: reply.products,
+            quoteLines: reply.quoteLines || [],
+            showAllInitially: reply.showAllInitially,
+          },
+        ])
+      }
+    })
+
+    setFenceCalculatorState(nextFenceState)
+    setIsAwaitingDeliveryLocation(Boolean(reply.deliveryPrompt))
   }
 
   function submitPrompt(prompt) {
@@ -223,8 +304,36 @@ function ChatHome() {
       return
     }
 
-    const reply = getChatReply(cleanPrompt, products)
-    const replyMessageId = crypto.randomUUID()
+    const fenceCalculatorResult = fenceCalculatorState
+      ? continueFenceCalculator(cleanPrompt, fenceCalculatorState)
+      : isFenceCalculatorStart(cleanPrompt)
+        ? startFenceCalculator(cleanPrompt)
+        : null
+
+    if (fenceCalculatorResult) {
+      trackSessionEvent({
+        eventType: 'chat_prompt',
+        prompt: cleanPrompt,
+        responseType: 'fence_calculator',
+        matchedProducts: fenceCalculatorResult.reply.products.map(
+          (product) => product.name,
+        ),
+        quoteTitle,
+        quoteTotal: quoteSubtotal,
+      })
+      showAssistantReply(
+        nextMessages,
+        fenceCalculatorResult.reply,
+        fenceCalculatorResult.state,
+      )
+      setInput('')
+      return
+    }
+
+    const replyPrompt = shouldUseDeliveryFollowUp(cleanPrompt)
+      ? `delivery to ${cleanPrompt}`
+      : cleanPrompt
+    const reply = getChatReply(replyPrompt, products)
 
     trackSessionEvent({
       eventType: 'chat_prompt',
@@ -236,43 +345,7 @@ function ChatHome() {
       quoteTotal: quoteSubtotal,
     })
 
-    setSelectedProduct(reply.selectedProduct)
-    setLastQuoteLines(reply.quoteLines || [])
-    setMessages([
-      ...nextMessages,
-      {
-        id: replyMessageId,
-        role: 'assistant',
-        image: reply.image,
-        link: reply.link,
-        quoteLines: [],
-        text: '',
-      },
-    ])
-    revealReplyText(replyMessageId, reply.text, () => {
-      if (reply.quoteLines?.length) {
-        setMessages((currentMessages) =>
-          currentMessages.map((message) =>
-            message.id === replyMessageId
-              ? { ...message, quoteLines: reply.quoteLines }
-              : message,
-          ),
-        )
-      }
-
-      if (reply.products.length) {
-        setMessages((currentMessages) => [
-          ...currentMessages,
-          {
-            id: crypto.randomUUID(),
-            role: 'assistant',
-            type: 'product-options',
-            products: reply.products,
-            showAllInitially: reply.showAllInitially,
-          },
-        ])
-      }
-    })
+    showAssistantReply(nextMessages, reply, null)
 
     setInput('')
   }
@@ -288,6 +361,8 @@ function ChatHome() {
     setMessages(starterMessages)
     setSelectedProduct(defaultProduct)
     setLastQuoteLines([])
+    setFenceCalculatorState(null)
+    setIsAwaitingDeliveryLocation(false)
   }
 
   function selectSuggestedProduct(product) {
@@ -424,6 +499,14 @@ function ChatHome() {
     )
   }
 
+  function clearQuoteItems() {
+    setQuoteItems([])
+    setQuoteTitle('')
+    setQuoteSections([defaultQuoteSection])
+    setActiveQuoteSectionId(defaultQuoteSection.id)
+    setQuoteAnimationKey(null)
+  }
+
   const selectedQuoteQuantity = selectedProduct
     ? quoteItems
         .filter((item) => item.product.id === selectedProduct.id)
@@ -433,7 +516,7 @@ function ChatHome() {
   const quoteCount = quoteItems.reduce((total, item) => total + item.quantity, 0)
 
   return (
-    <main className="flex h-screen flex-col overflow-hidden bg-stone-100 text-stone-950">
+    <main className="flex h-screen flex-col overflow-hidden bg-stone-50 text-stone-950">
       <AppHeader
         catalogCount={catalogCount}
         onQuoteOpen={() => setIsQuoteOpen(true)}
@@ -443,10 +526,10 @@ function ChatHome() {
       />
 
       <section className="mx-auto grid min-h-0 w-full max-w-7xl flex-1 gap-4 overflow-y-auto px-3 py-3 sm:gap-5 sm:px-5 sm:py-5 xl:grid-cols-[minmax(0,1.12fr)_minmax(340px,.88fr)] xl:overflow-hidden 2xl:grid-cols-[minmax(0,1.15fr)_minmax(360px,.85fr)]">
-        <div className="flex min-h-[520px] flex-col rounded-lg border border-stone-200 bg-stone-50 shadow-sm sm:min-h-[560px] xl:min-h-0">
-          <div className="flex shrink-0 flex-col gap-3 border-b border-stone-200 p-4 sm:flex-row sm:items-start sm:justify-between sm:gap-4 sm:p-5">
+        <div className="flex min-h-[520px] flex-col rounded-lg border border-stone-200 bg-white shadow-[0_1px_2px_rgb(0_0_0/0.04)] sm:min-h-[560px] xl:min-h-0">
+          <div className="flex shrink-0 flex-col gap-3 border-b border-stone-100 p-4 sm:flex-row sm:items-start sm:justify-between sm:gap-4 sm:p-5">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-wide text-stone-500">
+              <p className="text-xs font-bold uppercase tracking-wide text-stone-400">
                 Customer chat
               </p>
               <p className="mt-1 text-base font-bold text-stone-950 sm:text-lg">
@@ -454,7 +537,7 @@ function ChatHome() {
               </p>
             </div>
             <button
-              className="w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-sm font-semibold text-stone-700 transition hover:border-[#FC2C38] hover:bg-red-50 hover:text-[#FC2C38] focus:outline-none focus:ring-4 focus:ring-red-100 sm:w-auto sm:shrink-0"
+              className="w-full rounded-md border border-stone-200 bg-white px-3 py-2 text-sm font-semibold text-stone-600 transition hover:border-stone-300 hover:bg-stone-50 hover:text-stone-950 focus:outline-none focus:ring-4 focus:ring-stone-100 sm:w-auto sm:shrink-0"
               onClick={clearChat}
               type="button"
             >
@@ -472,29 +555,47 @@ function ChatHome() {
                     addQuoteLinesToQuote(lines)
                     setIsQuoteOpen(true)
                   }}
+                  onChoiceSelect={submitPrompt}
+                  onDeliveryPromptSubmit={submitPrompt}
                   onProductSelect={selectSuggestedProduct}
                 />
               ))}
               <div ref={messagesEndRef} />
             </div>
 
-            <div className="sticky bottom-0 shrink-0 space-y-4 border-t border-stone-200 bg-stone-50 pt-4">
-              <SuggestedPrompts prompts={suggestedPrompts} onSelect={submitPrompt} />
-              <form className="flex gap-2 sm:gap-3" onSubmit={handleSubmit}>
+            <div className="sticky bottom-0 shrink-0 space-y-3 border-t border-stone-100 bg-white/95 pt-4 backdrop-blur">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-wide text-stone-400">
+                    Ask the lumber desk
+                  </p>
+                  <p className="mt-0.5 text-sm font-semibold text-stone-700">
+                    Type a product, SKU, price question, or delivery ZIP.
+                  </p>
+                </div>
+                <span className="hidden rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700 sm:inline-flex">
+                  Online
+                </span>
+              </div>
+              <form
+                className="flex gap-2 rounded-lg border border-stone-200 bg-stone-50 p-2 shadow-[0_1px_2px_rgb(0_0_0/0.04)] focus-within:border-stone-300 focus-within:ring-4 focus-within:ring-stone-100 sm:gap-3"
+                onSubmit={handleSubmit}
+              >
                 <input
-                  className="min-w-0 flex-1 rounded-md border border-stone-300 bg-white px-3 py-3 text-base outline-none transition placeholder:text-stone-400 focus:border-stone-950 focus:ring-4 focus:ring-amber-200 sm:px-4"
+                  className="min-w-0 flex-1 rounded-md border-0 bg-transparent px-2 py-2.5 text-base font-semibold outline-none placeholder:font-normal placeholder:text-stone-400 sm:px-3"
                   onChange={(event) => setInput(event.target.value)}
-                  placeholder="Ask about 2x4-8, 2x4x8, OSB..."
+                  placeholder="Ask about 2x4-8, SKU 894, Hardie, delivery..."
                   type="text"
                   value={input}
                 />
                 <button
-                  className="shrink-0 rounded-md bg-[#FC2C38] px-4 py-3 text-sm font-black text-white transition hover:bg-[#de1f2b] focus:outline-none focus:ring-4 focus:ring-red-200 sm:px-5"
+                  className="shrink-0 rounded-md bg-[#FC2C38] px-4 py-2.5 text-sm font-black text-white transition hover:bg-[#de1f2b] focus:outline-none focus:ring-4 focus:ring-red-200 sm:px-5"
                   type="submit"
                 >
                   Ask
                 </button>
               </form>
+              <SuggestedPrompts prompts={suggestedPrompts} onSelect={submitPrompt} />
             </div>
           </div>
         </div>
@@ -525,6 +626,7 @@ function ChatHome() {
         isOpen={isQuoteOpen}
         items={quoteItems}
         onAnalyticsEvent={trackSessionEvent}
+        onClearQuote={clearQuoteItems}
         onClose={() => setIsQuoteOpen(false)}
         onAddSection={addQuoteSection}
         onActiveSectionChange={setActiveQuoteSectionId}

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 140" role="img" aria-labelledby="title">
+  <title id="title">Cedar fence posts</title>
+  <rect width="240" height="140" rx="12" fill="#f8f7f4"/>
+  <g transform="translate(31 18)">
+    <rect x="8" y="9" width="24" height="104" rx="3" fill="#a96f35" stroke="#77481f" stroke-width="3"/>
+    <rect x="145" y="9" width="24" height="104" rx="3" fill="#b87a3b" stroke="#77481f" stroke-width="3"/>
+    <path d="M16 22c7 8 7 20 0 30M153 24c8 10 8 25 0 38" stroke="#74451f" stroke-width="2" opacity=".5"/>
+    <rect x="32" y="42" width="113" height="12" rx="3" fill="#d8a45f"/>
+    <rect x="32" y="78" width="113" height="12" rx="3" fill="#d8a45f"/>
+  </g>
+</svg>

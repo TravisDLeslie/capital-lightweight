@@ -22,13 +22,13 @@ function ProductCard({ onAddToQuote, product, quoteQuantity = 0 }) {
   }
 
   return (
-    <article className="rounded-lg border border-stone-200 bg-white shadow-sm">
+    <article className="rounded-lg border border-stone-200 bg-white shadow-[0_1px_2px_rgb(0_0_0/0.04)]">
       <div className="space-y-4 p-4">
         <div>
           <div className="flex flex-col gap-4 sm:flex-row">
             <button
               aria-label={`View larger image of ${product.name}`}
-              className="group flex h-36 w-full shrink-0 items-center justify-center overflow-hidden rounded-md bg-stone-100 transition hover:scale-[1.02] hover:ring-4 hover:ring-red-100 focus:outline-none focus:ring-4 focus:ring-red-100 sm:h-32 sm:w-32 sm:hover:scale-[1.04]"
+              className="group flex h-36 w-full shrink-0 items-center justify-center overflow-hidden rounded-md bg-stone-50 ring-1 ring-stone-100 transition hover:scale-[1.02] hover:ring-stone-200 focus:outline-none focus:ring-4 focus:ring-stone-100 sm:h-32 sm:w-32 sm:hover:scale-[1.04]"
               onClick={() => setIsImageOpen(true)}
               type="button"
             >
@@ -40,7 +40,7 @@ function ProductCard({ onAddToQuote, product, quoteQuantity = 0 }) {
             </button>
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="rounded bg-stone-100 px-2 py-1 text-xs font-semibold text-stone-700">
+                <span className="rounded bg-stone-100 px-2 py-1 text-xs font-semibold text-stone-600">
                   {product.category}
                 </span>
                 <span
@@ -75,6 +75,25 @@ function ProductCard({ onAddToQuote, product, quoteQuantity = 0 }) {
               <p className="mt-2 text-[11px] font-medium uppercase tracking-wide text-stone-400">
                 Internal SKU: {internalSku}
               </p>
+              {product.specSheet ? (
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <a
+                    className="inline-flex rounded-md border border-stone-200 bg-white px-2.5 py-1.5 text-xs font-bold text-stone-700 transition hover:border-stone-400 hover:bg-stone-50 focus:outline-none focus:ring-4 focus:ring-stone-100"
+                    href={product.specSheet.href}
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    View spec sheet
+                  </a>
+                  <a
+                    className="inline-flex rounded-md bg-stone-100 px-2.5 py-1.5 text-xs font-bold text-stone-700 transition hover:bg-stone-200 focus:outline-none focus:ring-4 focus:ring-stone-100"
+                    download
+                    href={product.specSheet.href}
+                  >
+                    Download PDF
+                  </a>
+                </div>
+              ) : null}
             </div>
           </div>
 
@@ -89,7 +108,7 @@ function ProductCard({ onAddToQuote, product, quoteQuantity = 0 }) {
           ) : null}
         </div>
 
-        <div className="flex flex-col gap-3 border-t border-stone-200 pt-3 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
+        <div className="flex flex-col gap-3 border-t border-stone-100 pt-3 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">
               Current price
@@ -103,7 +122,7 @@ function ProductCard({ onAddToQuote, product, quoteQuantity = 0 }) {
                 / {product.unit}
               </span>
             </p>
-            <p className="mt-2 inline-flex rounded bg-slate-100 px-2.5 py-1.5 text-xs font-bold text-slate-700 ring-1 ring-slate-200">
+            <p className="mt-2 inline-flex rounded bg-stone-100 px-2.5 py-1.5 text-xs font-bold text-stone-600 ring-1 ring-stone-200">
               {priceVerificationLabel}
             </p>
           </div>
@@ -130,7 +149,7 @@ function ProductCard({ onAddToQuote, product, quoteQuantity = 0 }) {
                 : 'Add to quote'}
           </button>
           <a
-            className="rounded-md border border-[#FC2C38] px-4 py-2.5 text-center text-sm font-semibold text-[#FC2C38] transition hover:bg-red-50 focus:outline-none focus:ring-4 focus:ring-red-200"
+            className="rounded-md border border-stone-300 px-4 py-2.5 text-center text-sm font-semibold text-stone-700 transition hover:border-[#FC2C38] hover:bg-red-50 hover:text-[#FC2C38] focus:outline-none focus:ring-4 focus:ring-stone-100"
             href="tel:2083435481"
           >
             Call 208-343-5481

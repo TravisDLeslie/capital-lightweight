@@ -15,6 +15,7 @@ export function getChatReply(prompt, products) {
   if (generalQuestionReply) {
     return {
       kind: 'general',
+      deliveryPrompt: generalQuestionReply.deliveryPrompt,
       image: generalQuestionReply.image,
       text: generalQuestionReply.text,
       link: generalQuestionReply.link,

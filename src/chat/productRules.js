@@ -105,6 +105,10 @@ export function getFoundReplyText(prompt, matchedProducts) {
     return 'Yes, we stock common Simpson Strong-Tie hardware. Here are the closest hanger and connector options we have in the sample catalog.'
   }
 
+  if (allProductsAre(matchedProducts, 'Holdowns & Tension Ties')) {
+    return 'Yes, we can help with Simpson Strong-Tie holdowns and tension ties. I pulled that bucket up below, but the plans or engineer should control the final model, fasteners, and anchor requirements.'
+  }
+
   if (allProductsAre(matchedProducts, 'Engineered Lumber')) {
     return 'Yes, we stock engineered lumber options sold by the foot. I pulled the TJI and Microllam/LVL sizes so you can compare heights and pricing.'
   }
@@ -134,6 +138,19 @@ export function getRecommendationProducts(prompt, products) {
     normalizedPrompt.includes('subfloor')
   ) {
     return products.filter((product) => product.category === 'Sheet Goods').slice(0, 4)
+  }
+
+  if (
+    normalizedPrompt.includes('holdown') ||
+    normalizedPrompt.includes('holddown') ||
+    normalizedPrompt.includes('tensiontie') ||
+    normalizedPrompt.includes('decktensiontie') ||
+    normalizedPrompt.includes('straptie') ||
+    normalizedPrompt.includes('purlinanchor')
+  ) {
+    return products
+      .filter((product) => product.category === 'Holdowns & Tension Ties')
+      .slice(0, 4)
   }
 
   if (

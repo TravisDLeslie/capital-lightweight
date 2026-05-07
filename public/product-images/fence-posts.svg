@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 140" role="img" aria-labelledby="title">
+  <title id="title">Fence posts</title>
+  <rect width="240" height="140" rx="12" fill="#f8f7f4"/>
+  <g transform="translate(28 18)">
+    <rect x="10" y="14" width="24" height="100" rx="3" fill="#8b5a2b"/>
+    <rect x="150" y="14" width="24" height="100" rx="3" fill="#8b5a2b"/>
+    <rect x="34" y="38" width="116" height="12" rx="3" fill="#d8b071"/>
+    <rect x="34" y="78" width="116" height="12" rx="3" fill="#d8b071"/>
+    <circle cx="92" cy="104" r="21" fill="#d9dde0" stroke="#9ca3af" stroke-width="4"/>
+    <path d="M92 83v42" stroke="#8b9198" stroke-width="7" stroke-linecap="round"/>
+  </g>
+</svg>

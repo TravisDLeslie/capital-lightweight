@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 140" role="img" aria-labelledby="title">
+  <title id="title">Fence pickets</title>
+  <rect width="240" height="140" rx="12" fill="#f8f7f4"/>
+  <g transform="translate(34 22)">
+    <path d="M0 18 14 0l14 18v88H0z" fill="#d8b071" stroke="#8f6636" stroke-width="3"/>
+    <path d="M38 18 52 0l14 18v88H38z" fill="#e4bd7b" stroke="#8f6636" stroke-width="3"/>
+    <path d="M76 18 90 0l14 18v88H76z" fill="#d8b071" stroke="#8f6636" stroke-width="3"/>
+    <path d="M114 18 128 0l14 18v88h-28z" fill="#e4bd7b" stroke="#8f6636" stroke-width="3"/>
+    <path d="M152 18 166 0l14 18v88h-28z" fill="#d8b071" stroke="#8f6636" stroke-width="3"/>
+    <path d="M10 34h160M10 69h160" stroke="#7a552f" stroke-width="5" stroke-linecap="round" opacity=".35"/>
+  </g>
+</svg>
