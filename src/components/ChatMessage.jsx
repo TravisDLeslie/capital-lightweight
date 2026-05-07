@@ -40,7 +40,9 @@ function ChatMessage({ message, onAddQuoteLines, onProductSelect }) {
   return (
     <div className={`flex ${isCustomer ? 'justify-end' : 'justify-start'}`}>
       <div
-        className={`max-w-[88%] rounded-lg px-4 py-3 text-sm leading-6 ${
+        className={`${
+          isProductOptions ? 'w-full max-w-full' : 'max-w-[92%] sm:max-w-[88%]'
+        } rounded-lg px-3 py-3 text-sm leading-6 break-words sm:px-4 ${
           isCustomer
             ? 'bg-stone-700 text-white'
             : 'border border-stone-200 bg-white text-stone-800'

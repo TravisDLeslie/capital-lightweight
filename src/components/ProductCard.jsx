@@ -25,10 +25,10 @@ function ProductCard({ onAddToQuote, product, quoteQuantity = 0 }) {
     <article className="rounded-lg border border-stone-200 bg-white shadow-sm">
       <div className="space-y-4 p-4">
         <div>
-          <div className="flex gap-4">
+          <div className="flex flex-col gap-4 sm:flex-row">
             <button
               aria-label={`View larger image of ${product.name}`}
-              className="group flex h-32 w-32 shrink-0 items-center justify-center overflow-hidden rounded-md bg-stone-100 transition hover:scale-[1.04] hover:ring-4 hover:ring-red-100 focus:outline-none focus:ring-4 focus:ring-red-100"
+              className="group flex h-36 w-full shrink-0 items-center justify-center overflow-hidden rounded-md bg-stone-100 transition hover:scale-[1.02] hover:ring-4 hover:ring-red-100 focus:outline-none focus:ring-4 focus:ring-red-100 sm:h-32 sm:w-32 sm:hover:scale-[1.04]"
               onClick={() => setIsImageOpen(true)}
               type="button"
             >
@@ -89,7 +89,7 @@ function ProductCard({ onAddToQuote, product, quoteQuantity = 0 }) {
           ) : null}
         </div>
 
-        <div className="flex items-end justify-between gap-4 border-t border-stone-200 pt-3">
+        <div className="flex flex-col gap-3 border-t border-stone-200 pt-3 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">
               Current price
@@ -107,7 +107,7 @@ function ProductCard({ onAddToQuote, product, quoteQuantity = 0 }) {
               {priceVerificationLabel}
             </p>
           </div>
-          <div className="text-right text-sm text-stone-600">
+          <div className="text-left text-sm text-stone-600 sm:text-right">
             <p className="font-semibold text-stone-900">
               {availability.detailTitle}
             </p>
@@ -115,7 +115,7 @@ function ProductCard({ onAddToQuote, product, quoteQuantity = 0 }) {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <button
             className={`rounded-md bg-[#FC2C38] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#de1f2b] focus:outline-none focus:ring-4 focus:ring-red-200 ${
               isAddAnimating ? 'animate-quote-pop' : ''

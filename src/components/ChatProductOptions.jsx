@@ -46,14 +46,14 @@ function ChatProductOptions({ products, onSelect, showAllInitially = false }) {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
         {visibleProducts.map((product) => {
           const availability = getAvailability(product)
           const priceVerificationLabel = getPriceVerificationLabel(product)
 
           return (
             <button
-            className="min-h-36 rounded-md border border-stone-200 bg-white p-4 text-left transition hover:border-[#FC2C38] hover:bg-red-50 focus:outline-none focus:ring-4 focus:ring-red-100"
+            className="min-h-36 rounded-md border border-stone-200 bg-white p-3 text-left transition hover:border-[#FC2C38] hover:bg-red-50 focus:outline-none focus:ring-4 focus:ring-red-100 sm:p-4"
             key={product.id}
             onClick={() => onSelect(product)}
             type="button"
@@ -61,7 +61,7 @@ function ChatProductOptions({ products, onSelect, showAllInitially = false }) {
             <div className="flex gap-3">
               <img
                 alt=""
-                className="h-16 w-16 rounded-md bg-stone-100 object-contain p-1"
+                className="h-14 w-14 shrink-0 rounded-md bg-stone-100 object-contain p-1 sm:h-16 sm:w-16"
                 src={product.image}
               />
               <div className="min-w-0 flex-1">
@@ -74,13 +74,13 @@ function ChatProductOptions({ products, onSelect, showAllInitially = false }) {
               </div>
             </div>
             <div className="mt-4 border-t border-stone-200 pt-3">
-              <div className="flex items-center justify-between gap-3">
+              <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-3">
                 <p className="text-base font-black text-stone-950">
                   {product.price
                     ? `$${product.price.toFixed(2)}`
                     : availability.priceFallback}
                 </p>
-                <div className="flex items-center gap-2">
+                <div className="flex shrink-0 items-center gap-2">
                   <span
                     className={`inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-xs font-bold ${
                       availability.badgeClass

@@ -19,7 +19,31 @@ export function normalizeQuery(value) {
     .replace(/[^a-z0-9/x]/g, '')
 }
 
+function getProductSku(product) {
+  return String(product.stockSku || product.id || '').toLowerCase()
+}
+
+function findSkuProduct(query, products) {
+  const trimmedQuery = query.trim().toLowerCase()
+  const skuPromptMatch = trimmedQuery.match(/\bsku\s*#?\s*([a-z0-9-]+)/i)
+  const requestedSku = skuPromptMatch?.[1]?.replace(/[^a-z0-9-]/gi, '').toLowerCase()
+
+  if (requestedSku) {
+    return products.find((product) => getProductSku(product) === requestedSku)
+  }
+
+  const normalizedQuery = normalizeQuery(query)
+
+  return products.find((product) => normalizeQuery(getProductSku(product)) === normalizedQuery)
+}
+
 export function findProduct(query, products) {
+  const skuProduct = findSkuProduct(query, products)
+
+  if (skuProduct) {
+    return skuProduct
+  }
+
   const normalizedQuery = normalizeQuery(query)
 
   return products.find((product) => {
@@ -34,6 +58,12 @@ export function findProduct(query, products) {
 }
 
 export function findProductMatches(query, products) {
+  const skuProduct = findSkuProduct(query, products)
+
+  if (skuProduct) {
+    return [skuProduct]
+  }
+
   const normalizedQuery = normalizeQuery(query)
 
   if (!normalizedQuery) {

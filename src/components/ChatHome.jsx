@@ -442,19 +442,19 @@ function ChatHome() {
         quoteSubtotal={quoteSubtotal}
       />
 
-      <section className="mx-auto grid min-h-0 w-full max-w-7xl flex-1 gap-6 overflow-y-auto px-5 py-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(360px,.85fr)] lg:overflow-hidden">
-        <div className="flex min-h-[560px] flex-col rounded-lg border border-stone-200 bg-stone-50 shadow-sm lg:min-h-0">
-          <div className="flex shrink-0 items-start justify-between gap-4 border-b border-stone-200 p-5">
+      <section className="mx-auto grid min-h-0 w-full max-w-7xl flex-1 gap-4 overflow-y-auto px-3 py-3 sm:gap-6 sm:px-5 sm:py-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(340px,.85fr)] lg:overflow-hidden xl:grid-cols-[minmax(0,1.15fr)_minmax(360px,.85fr)]">
+        <div className="flex min-h-[520px] flex-col rounded-lg border border-stone-200 bg-stone-50 shadow-sm sm:min-h-[560px] lg:min-h-0">
+          <div className="flex shrink-0 flex-col gap-3 border-b border-stone-200 p-4 sm:flex-row sm:items-start sm:justify-between sm:gap-4 sm:p-5">
             <div>
               <p className="text-sm font-semibold uppercase tracking-wide text-stone-500">
                 Customer chat
               </p>
-              <p className="mt-1 text-lg font-bold text-stone-950">
+              <p className="mt-1 text-base font-bold text-stone-950 sm:text-lg">
                 Ask us anything, hours, address, materials
               </p>
             </div>
             <button
-              className="shrink-0 rounded-md border border-stone-300 bg-white px-3 py-2 text-sm font-semibold text-stone-700 transition hover:border-[#FC2C38] hover:bg-red-50 hover:text-[#FC2C38] focus:outline-none focus:ring-4 focus:ring-red-100"
+              className="w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-sm font-semibold text-stone-700 transition hover:border-[#FC2C38] hover:bg-red-50 hover:text-[#FC2C38] focus:outline-none focus:ring-4 focus:ring-red-100 sm:w-auto sm:shrink-0"
               onClick={clearChat}
               type="button"
             >
@@ -462,7 +462,7 @@ function ChatHome() {
             </button>
           </div>
 
-          <div className="flex min-h-0 flex-1 flex-col p-5">
+          <div className="flex min-h-0 flex-1 flex-col p-4 sm:p-5">
             <div className="min-h-0 flex-1 space-y-3 overflow-y-auto pr-1 pb-5">
               {messages.map((message) => (
                 <ChatMessage
@@ -480,16 +480,16 @@ function ChatHome() {
 
             <div className="sticky bottom-0 shrink-0 space-y-4 border-t border-stone-200 bg-stone-50 pt-4">
               <SuggestedPrompts prompts={suggestedPrompts} onSelect={submitPrompt} />
-              <form className="flex gap-3" onSubmit={handleSubmit}>
+              <form className="flex gap-2 sm:gap-3" onSubmit={handleSubmit}>
                 <input
-                  className="min-w-0 flex-1 rounded-md border border-stone-300 bg-white px-4 py-3 text-base outline-none transition placeholder:text-stone-400 focus:border-stone-950 focus:ring-4 focus:ring-amber-200"
+                  className="min-w-0 flex-1 rounded-md border border-stone-300 bg-white px-3 py-3 text-base outline-none transition placeholder:text-stone-400 focus:border-stone-950 focus:ring-4 focus:ring-amber-200 sm:px-4"
                   onChange={(event) => setInput(event.target.value)}
                   placeholder="Ask about 2x4-8, 2x4x8, OSB..."
                   type="text"
                   value={input}
                 />
                 <button
-                  className="rounded-md bg-[#FC2C38] px-5 py-3 text-sm font-black text-white transition hover:bg-[#de1f2b] focus:outline-none focus:ring-4 focus:ring-red-200"
+                  className="shrink-0 rounded-md bg-[#FC2C38] px-4 py-3 text-sm font-black text-white transition hover:bg-[#de1f2b] focus:outline-none focus:ring-4 focus:ring-red-200 sm:px-5"
                   type="submit"
                 >
                   Ask
