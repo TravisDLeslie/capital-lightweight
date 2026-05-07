@@ -24,16 +24,25 @@ function renderMessageText(text, shouldHighlightPrice) {
   )
 }
 
-function ChatMessage({ message, onProductSelect }) {
+function getQuoteButtonLabel(lines) {
+  if (!lines?.length) {
+    return null
+  }
+
+  return lines.length > 1 ? 'Add all to quote' : 'Add to quote'
+}
+
+function ChatMessage({ message, onAddQuoteLines, onProductSelect }) {
   const isCustomer = message.role === 'customer'
   const isProductOptions = message.type === 'product-options'
+  const quoteButtonLabel = getQuoteButtonLabel(message.quoteLines)
 
   return (
     <div className={`flex ${isCustomer ? 'justify-end' : 'justify-start'}`}>
       <div
         className={`max-w-[88%] rounded-lg px-4 py-3 text-sm leading-6 ${
           isCustomer
-            ? 'bg-stone-950 text-white'
+            ? 'bg-stone-700 text-white'
             : 'border border-stone-200 bg-white text-stone-800'
         }`}
       >
@@ -45,6 +54,13 @@ function ChatMessage({ message, onProductSelect }) {
           />
         ) : (
           <>
+            {message.image ? (
+              <img
+                alt={message.image.alt}
+                className="mb-3 max-h-56 w-full rounded-md object-cover"
+                src={message.image.src}
+              />
+            ) : null}
             {renderMessageText(message.text, !isCustomer)}
             {message.link ? (
               <a
@@ -55,6 +71,15 @@ function ChatMessage({ message, onProductSelect }) {
               >
                 {message.link.label}
               </a>
+            ) : null}
+            {quoteButtonLabel ? (
+              <button
+                className="mt-3 inline-flex rounded-md bg-stone-950 px-3 py-2 text-sm font-bold text-white transition hover:bg-stone-800 focus:outline-none focus:ring-4 focus:ring-red-100 sm:ml-2"
+                onClick={() => onAddQuoteLines(message.quoteLines)}
+                type="button"
+              >
+                {quoteButtonLabel}
+              </button>
             ) : null}
           </>
         )}

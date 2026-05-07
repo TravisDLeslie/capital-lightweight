@@ -1,1 +1,20 @@
 @import "tailwindcss";
+
+@keyframes quote-pop {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgb(252 44 56 / 0.35);
+  }
+  45% {
+    transform: scale(1.04);
+    box-shadow: 0 0 0 8px rgb(252 44 56 / 0.12);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 14px rgb(252 44 56 / 0);
+  }
+}
+
+.animate-quote-pop {
+  animation: quote-pop 520ms ease-out;
+}

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 180" role="img" aria-label="Concrete bag">
+  <rect width="220" height="180" fill="#f5f2ed"/>
+  <path d="M63 27h94l18 126H45L63 27Z" fill="#d8d2c8"/>
+  <path d="M63 27h94l-10 18H73L63 27Z" fill="#bfb6a9"/>
+  <path d="M48 132h124l3 21H45l3-21Z" fill="#a9a095"/>
+  <rect x="68" y="60" width="84" height="40" rx="4" fill="#fc2c38"/>
+  <text x="110" y="77" fill="#fff" font-family="Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle">READY MIX</text>
+  <text x="110" y="94" fill="#fff" font-family="Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle">CONCRETE</text>
+  <text x="110" y="122" fill="#312b26" font-family="Arial, sans-serif" font-size="20" font-weight="800" text-anchor="middle">4000 PSI</text>
+  <path d="M78 43h64" stroke="#8d8478" stroke-width="4" stroke-linecap="round"/>
+  <path d="M66 145h88" stroke="#8d8478" stroke-width="4" stroke-linecap="round"/>
+</svg>

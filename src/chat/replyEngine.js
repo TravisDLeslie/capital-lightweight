@@ -15,9 +15,11 @@ export function getChatReply(prompt, products) {
   if (generalQuestionReply) {
     return {
       kind: 'general',
+      image: generalQuestionReply.image,
       text: generalQuestionReply.text,
       link: generalQuestionReply.link,
       products: [],
+      quoteLines: [],
       selectedProduct: null,
       showAllInitially: false,
     }
@@ -30,6 +32,7 @@ export function getChatReply(prompt, products) {
       kind: 'product-knowledge',
       text: productKnowledgeReply.text,
       products: productKnowledgeReply.products,
+      quoteLines: [],
       selectedProduct: null,
       showAllInitially: true,
     }
@@ -57,6 +60,12 @@ export function getChatReply(prompt, products) {
         : isMultipleMatch
           ? null
           : matchedProducts[0],
+      quoteLines: priceCalculation
+        ? priceCalculation.lines.map((line) => ({
+            product: line.product,
+            quantity: line.quantity,
+          }))
+        : [],
       showAllInitially: cleanPrompt.toLowerCase().includes('osb'),
     }
   }
@@ -73,6 +82,10 @@ export function getChatReply(prompt, products) {
       kind: 'exact-match',
       text: `${recommendationCalculation.text} I picked the closest matching stocked item for that math.`,
       products: recommendationCalculation.products,
+      quoteLines: recommendationCalculation.lines.map((line) => ({
+        product: line.product,
+        quantity: line.quantity,
+      })),
       selectedProduct: recommendationCalculation.product,
       showAllInitially: false,
     }
@@ -82,6 +95,7 @@ export function getChatReply(prompt, products) {
     kind: 'recommendation',
     text: getNotFoundReplyText(cleanPrompt, recommendations),
     products: recommendations,
+    quoteLines: [],
     selectedProduct: null,
     showAllInitially: false,
   }

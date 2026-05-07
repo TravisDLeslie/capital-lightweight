@@ -7,6 +7,8 @@ import QuoteDrawer from './QuoteDrawer'
 import SuggestedPrompts from './SuggestedPrompts'
 import { getChatReply } from '../chat/replyEngine'
 import { products } from '../data/products'
+import { getQuoteSubtotal } from '../utils/quoteTotals'
+import { trackSessionEvent } from '../utils/sessionAnalytics'
 
 const starterMessages = [
   {
@@ -25,13 +27,23 @@ const suggestedPrompts = [
 
 const replyCharacterDelay = 18
 const productRevealDelay = 450
+const defaultProduct =
+  products.find((product) => product.id === 'dfl-2x4x8') || products[0]
+const defaultQuoteSection = { id: 'general', name: 'General Materials' }
 
 function ChatHome() {
   const [input, setInput] = useState('')
   const [messages, setMessages] = useState(starterMessages)
-  const [selectedProduct, setSelectedProduct] = useState(products[0])
+  const [selectedProduct, setSelectedProduct] = useState(defaultProduct)
   const [quoteItems, setQuoteItems] = useState([])
+  const [quoteTitle, setQuoteTitle] = useState('')
+  const [quoteSections, setQuoteSections] = useState([defaultQuoteSection])
+  const [activeQuoteSectionId, setActiveQuoteSectionId] = useState(
+    defaultQuoteSection.id,
+  )
+  const [lastQuoteLines, setLastQuoteLines] = useState([])
   const [isQuoteOpen, setIsQuoteOpen] = useState(false)
+  const [quoteAnimationKey, setQuoteAnimationKey] = useState(null)
   const messagesEndRef = useRef(null)
   const pendingReplyTimersRef = useRef([])
 
@@ -98,6 +110,58 @@ function ChatHome() {
     scheduleReplyStep(revealNextChunk, 180)
   }
 
+  function isAddLastQuotePrompt(prompt) {
+    return (
+      /\b(add|put|place)\b/i.test(prompt) &&
+      /\b(it|that|them|those|quote|cart|list)\b/i.test(prompt) &&
+      /\b(quote|cart|list|it|that|them|those)\b/i.test(prompt)
+    )
+  }
+
+  function addQuoteLinesToQuote(lines) {
+    setQuoteAnimationKey(crypto.randomUUID())
+    trackSessionEvent({
+      eventType: 'add_to_quote',
+      matchedProducts: lines.map((line) => `${line.quantity} ${line.product.name}`),
+      addedToQuote: true,
+      quoteTitle,
+      quoteTotal: quoteSubtotal,
+    })
+    setQuoteItems((currentItems) => {
+      return lines.reduce((nextItems, line) => {
+        const existingItem = nextItems.find(
+          (item) =>
+            item.product.id === line.product.id &&
+            (item.sectionId || defaultQuoteSection.id) === activeQuoteSectionId,
+        )
+
+        if (existingItem) {
+          return nextItems.map((item) =>
+            item.id === existingItem.id
+              ? { ...item, quantity: item.quantity + line.quantity }
+              : item,
+          )
+        }
+
+        return [
+          ...nextItems,
+          {
+            id: crypto.randomUUID(),
+            product: line.product,
+            quantity: line.quantity,
+            sectionId: activeQuoteSectionId,
+          },
+        ]
+      }, currentItems)
+    })
+  }
+
+  function getQuoteLineSummary(lines) {
+    return lines
+      .map((line) => `${line.quantity} ${line.product.unit} of ${line.product.name}`)
+      .join(', ')
+  }
+
   function submitPrompt(prompt) {
     const cleanPrompt = prompt.trim()
 
@@ -106,8 +170,6 @@ function ChatHome() {
     }
 
     clearPendingReplyTimers()
-    const reply = getChatReply(cleanPrompt, products)
-    const replyMessageId = crypto.randomUUID()
     const nextMessages = [
       ...messages,
       {
@@ -117,17 +179,82 @@ function ChatHome() {
       },
     ]
 
+    if (isAddLastQuotePrompt(cleanPrompt)) {
+      const replyMessageId = crypto.randomUUID()
+
+      if (lastQuoteLines.length) {
+        addQuoteLinesToQuote(lastQuoteLines)
+        setIsQuoteOpen(true)
+        setMessages([
+          ...nextMessages,
+          {
+            id: replyMessageId,
+            role: 'assistant',
+            text: '',
+          },
+        ])
+        revealReplyText(
+          replyMessageId,
+          `Done. I added ${getQuoteLineSummary(lastQuoteLines)} to your quote.`,
+          () => {},
+        )
+      } else {
+        setMessages([
+          ...nextMessages,
+          {
+            id: replyMessageId,
+            role: 'assistant',
+            text: '',
+          },
+        ])
+        revealReplyText(
+          replyMessageId,
+          'I do not have a recent priced item to add yet. Ask me for a price or quantity first, then I can add it to your quote.',
+          () => {},
+        )
+      }
+
+      setInput('')
+      return
+    }
+
+    const reply = getChatReply(cleanPrompt, products)
+    const replyMessageId = crypto.randomUUID()
+
+    trackSessionEvent({
+      eventType: 'chat_prompt',
+      prompt: cleanPrompt,
+      responseType: reply.kind,
+      matchedProducts: reply.products.map((product) => product.name),
+      selectedProduct: reply.selectedProduct?.name,
+      quoteTitle,
+      quoteTotal: quoteSubtotal,
+    })
+
     setSelectedProduct(reply.selectedProduct)
+    setLastQuoteLines(reply.quoteLines || [])
     setMessages([
       ...nextMessages,
       {
         id: replyMessageId,
         role: 'assistant',
+        image: reply.image,
         link: reply.link,
+        quoteLines: [],
         text: '',
       },
     ])
     revealReplyText(replyMessageId, reply.text, () => {
+      if (reply.quoteLines?.length) {
+        setMessages((currentMessages) =>
+          currentMessages.map((message) =>
+            message.id === replyMessageId
+              ? { ...message, quoteLines: reply.quoteLines }
+              : message,
+          ),
+        )
+      }
+
       if (reply.products.length) {
         setMessages((currentMessages) => [
           ...currentMessages,
@@ -154,11 +281,19 @@ function ChatHome() {
     clearPendingReplyTimers()
     setInput('')
     setMessages(starterMessages)
-    setSelectedProduct(products[0])
+    setSelectedProduct(defaultProduct)
+    setLastQuoteLines([])
   }
 
   function selectSuggestedProduct(product) {
     setSelectedProduct(product)
+    trackSessionEvent({
+      eventType: 'product_selected',
+      selectedProduct: product.name,
+      matchedProducts: [product.name],
+      quoteTitle,
+      quoteTotal: quoteSubtotal,
+    })
   }
 
   function addToQuote(product) {
@@ -166,44 +301,111 @@ function ChatHome() {
       return
     }
 
+    setQuoteAnimationKey(crypto.randomUUID())
+    trackSessionEvent({
+      eventType: 'add_to_quote',
+      selectedProduct: product.name,
+      matchedProducts: [product.name],
+      addedToQuote: true,
+      quoteTitle,
+      quoteTotal: quoteSubtotal,
+    })
     setQuoteItems((currentItems) => {
-      const existingItem = currentItems.find((item) => item.product.id === product.id)
+      const existingItem = currentItems.find(
+        (item) =>
+          item.product.id === product.id &&
+          (item.sectionId || defaultQuoteSection.id) === activeQuoteSectionId,
+      )
 
       if (existingItem) {
         return currentItems.map((item) =>
-          item.product.id === product.id
+          item.id === existingItem.id
             ? { ...item, quantity: item.quantity + 1 }
             : item,
         )
       }
 
-      return [...currentItems, { product, quantity: 1 }]
+      return [
+        ...currentItems,
+        {
+          id: crypto.randomUUID(),
+          product,
+          quantity: 1,
+          sectionId: activeQuoteSectionId,
+        },
+      ]
     })
   }
 
   function addDeliveryToQuote(deliveryProduct) {
+    trackSessionEvent({
+      eventType: 'add_to_quote',
+      selectedProduct: deliveryProduct.name,
+      matchedProducts: [deliveryProduct.name],
+      addedToQuote: true,
+      quoteTitle,
+      quoteTotal: quoteSubtotal,
+    })
     setQuoteItems((currentItems) => [
       ...currentItems.filter((item) => item.product.category !== 'Delivery'),
-      { product: deliveryProduct, quantity: 1 },
+      {
+        id: crypto.randomUUID(),
+        product: deliveryProduct,
+        quantity: 1,
+        sectionId: activeQuoteSectionId,
+      },
     ])
     setIsQuoteOpen(true)
   }
 
-  function increaseQuoteItem(productId) {
+  function addQuoteSection(sectionName) {
+    const cleanSectionName = sectionName.trim()
+
+    if (!cleanSectionName) {
+      return
+    }
+
+    const existingSection = quoteSections.find(
+      (section) => section.name.toLowerCase() === cleanSectionName.toLowerCase(),
+    )
+
+    if (existingSection) {
+      setActiveQuoteSectionId(existingSection.id)
+      return
+    }
+
+    const nextSection = {
+      id: crypto.randomUUID(),
+      name: cleanSectionName,
+    }
+
+    setQuoteSections((currentSections) => [...currentSections, nextSection])
+    setActiveQuoteSectionId(nextSection.id)
+  }
+
+  function changeQuoteItemSection(itemId, sectionId) {
     setQuoteItems((currentItems) =>
       currentItems.map((item) =>
-        item.product.id === productId
+        item.id === itemId ? { ...item, sectionId } : item,
+      ),
+    )
+  }
+
+  function increaseQuoteItem(itemId) {
+    setQuoteItems((currentItems) =>
+      currentItems.map((item) =>
+        item.id === itemId
           ? { ...item, quantity: item.quantity + 1 }
           : item,
       ),
     )
   }
 
-  function decreaseQuoteItem(productId) {
+  function decreaseQuoteItem(itemId) {
     setQuoteItems((currentItems) =>
       currentItems
         .map((item) =>
-          item.product.id === productId
+          item.id === itemId
             ? { ...item, quantity: item.quantity - 1 }
             : item,
         )
@@ -211,18 +413,18 @@ function ChatHome() {
     )
   }
 
-  function removeQuoteItem(productId) {
+  function removeQuoteItem(itemId) {
     setQuoteItems((currentItems) =>
-      currentItems.filter((item) => item.product.id !== productId),
+      currentItems.filter((item) => item.id !== itemId),
     )
   }
 
-  const selectedQuoteItem = selectedProduct
-    ? quoteItems.find((item) => item.product.id === selectedProduct.id)
-    : null
-  const quoteSubtotal = quoteItems.reduce((total, item) => {
-    return total + item.product.price * item.quantity
-  }, 0)
+  const selectedQuoteQuantity = selectedProduct
+    ? quoteItems
+        .filter((item) => item.product.id === selectedProduct.id)
+        .reduce((total, item) => total + item.quantity, 0)
+    : 0
+  const quoteSubtotal = getQuoteSubtotal(quoteItems)
   const quoteCount = quoteItems.reduce((total, item) => total + item.quantity, 0)
 
   return (
@@ -230,6 +432,7 @@ function ChatHome() {
       <AppHeader
         catalogCount={catalogCount}
         onQuoteOpen={() => setIsQuoteOpen(true)}
+        quoteAnimationKey={quoteAnimationKey}
         quoteCount={quoteCount}
         quoteSubtotal={quoteSubtotal}
       />
@@ -242,7 +445,7 @@ function ChatHome() {
                 Customer chat
               </p>
               <p className="mt-1 text-lg font-bold text-stone-950">
-                Ask for a size, sku, or common jobsite shorthand.
+                Ask us anything, hours, address, materials
               </p>
             </div>
             <button
@@ -260,6 +463,10 @@ function ChatHome() {
                 <ChatMessage
                   key={message.id}
                   message={message}
+                  onAddQuoteLines={(lines) => {
+                    addQuoteLinesToQuote(lines)
+                    setIsQuoteOpen(true)
+                  }}
                   onProductSelect={selectSuggestedProduct}
                 />
               ))}
@@ -293,7 +500,7 @@ function ChatHome() {
               <ProductCard
                 onAddToQuote={addToQuote}
                 product={selectedProduct}
-                quoteQuantity={selectedQuoteItem?.quantity}
+                quoteQuantity={selectedQuoteQuantity}
               />
               <DeliveryEstimator onAddDeliveryToQuote={addDeliveryToQuote} />
             </>
@@ -309,12 +516,20 @@ function ChatHome() {
         </aside>
       </section>
       <QuoteDrawer
+        activeSectionId={activeQuoteSectionId}
         isOpen={isQuoteOpen}
         items={quoteItems}
+        onAnalyticsEvent={trackSessionEvent}
         onClose={() => setIsQuoteOpen(false)}
+        onAddSection={addQuoteSection}
+        onActiveSectionChange={setActiveQuoteSectionId}
+        onChangeItemSection={changeQuoteItemSection}
         onDecrease={decreaseQuoteItem}
         onIncrease={increaseQuoteItem}
         onRemove={removeQuoteItem}
+        onTitleChange={setQuoteTitle}
+        sections={quoteSections}
+        title={quoteTitle}
       />
     </main>
   )

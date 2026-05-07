@@ -68,12 +68,20 @@ export function findProductMatches(query, products) {
     'deckmaterial',
     'deckmaterials',
   ]
+  const broadConcreteTerms = [
+    'concrete',
+    'readymix',
+    'sackedgoods',
+    'bagconcrete',
+    'baggedconcrete',
+  ]
   const broadTerms = [
     ...broadSheetGoodsTerms,
     ...broadHardwareTerms,
     ...broadEngineeredTerms,
     ...broadBeamTerms,
     ...broadDeckingTerms,
+    ...broadConcreteTerms,
   ]
   const isBroadHardwareQuery = broadHardwareTerms.some((term) =>
     normalizedQuery.includes(term),
@@ -140,6 +148,18 @@ export function findProductMatches(query, products) {
   const exactProduct = exactProductMatches[0]?.product
 
   if (exactProduct) {
+    if (normalizedQuery.includes('zip')) {
+      const relatedZipProducts = products.filter((product) => {
+        const normalizedName = normalizeQuery(product.name)
+        return normalizedName.includes('zip') || normalizedName.includes('advantech')
+      })
+
+      return [
+        exactProduct,
+        ...relatedZipProducts.filter((product) => product.id !== exactProduct.id),
+      ]
+    }
+
     return [exactProduct]
   }
 
@@ -157,6 +177,14 @@ export function findProductMatches(query, products) {
 
   if (isBroadBeamQuery) {
     return products.filter((product) => product.category === 'Timbers & Beams')
+  }
+
+  const isBroadConcreteQuery = broadConcreteTerms.some((term) =>
+    normalizedQuery.includes(term),
+  )
+
+  if (isBroadConcreteQuery) {
+    return products.filter((product) => product.category === 'Concrete & Sacked Goods')
   }
 
   if (normalizedQuery.includes('zip')) {

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { getAvailability } from '../utils/availability'
+import { getPriceVerificationLabel } from '../utils/priceVerification'
 
 function ChatProductOptions({ products, onSelect, showAllInitially = false }) {
   const [showAll, setShowAll] = useState(showAllInitially)
@@ -48,10 +49,11 @@ function ChatProductOptions({ products, onSelect, showAllInitially = false }) {
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         {visibleProducts.map((product) => {
           const availability = getAvailability(product)
+          const priceVerificationLabel = getPriceVerificationLabel(product)
 
           return (
             <button
-            className="min-h-28 rounded-md border border-stone-200 bg-white p-3 text-left transition hover:border-[#FC2C38] hover:bg-red-50 focus:outline-none focus:ring-4 focus:ring-red-100"
+            className="min-h-36 rounded-md border border-stone-200 bg-white p-4 text-left transition hover:border-[#FC2C38] hover:bg-red-50 focus:outline-none focus:ring-4 focus:ring-red-100"
             key={product.id}
             onClick={() => onSelect(product)}
             type="button"
@@ -59,7 +61,7 @@ function ChatProductOptions({ products, onSelect, showAllInitially = false }) {
             <div className="flex gap-3">
               <img
                 alt=""
-                className="h-14 w-14 rounded-md bg-stone-100 object-cover"
+                className="h-16 w-16 rounded-md bg-stone-100 object-contain p-1"
                 src={product.image}
               />
               <div className="min-w-0 flex-1">
@@ -71,34 +73,39 @@ function ChatProductOptions({ products, onSelect, showAllInitially = false }) {
                 </p>
               </div>
             </div>
-            <div className="mt-3 flex items-center justify-between border-t border-stone-200 pt-3">
-              <p className="text-base font-black text-stone-950">
-                {product.price
-                  ? `$${product.price.toFixed(2)}`
-                  : availability.priceFallback}
-              </p>
-              <div className="flex items-center gap-3">
-                <span
-                  className={`inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-xs font-bold ${
-                    availability.badgeClass
-                  }`}
-                >
-                  <span className="relative flex h-2.5 w-2.5">
-                    <span
-                      className={`absolute inline-flex h-full w-full animate-ping rounded-full opacity-60 ${
-                        availability.pingClass
-                      }`}
-                    />
-                    <span
-                      className={`relative inline-flex h-2.5 w-2.5 rounded-full ${
-                        availability.dotClass
-                      }`}
-                    />
+            <div className="mt-4 border-t border-stone-200 pt-3">
+              <div className="flex items-center justify-between gap-3">
+                <p className="text-base font-black text-stone-950">
+                  {product.price
+                    ? `$${product.price.toFixed(2)}`
+                    : availability.priceFallback}
+                </p>
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-xs font-bold ${
+                      availability.badgeClass
+                    }`}
+                  >
+                    <span className="relative flex h-2.5 w-2.5">
+                      <span
+                        className={`absolute inline-flex h-full w-full animate-ping rounded-full opacity-60 ${
+                          availability.pingClass
+                        }`}
+                      />
+                      <span
+                        className={`relative inline-flex h-2.5 w-2.5 rounded-full ${
+                          availability.dotClass
+                        }`}
+                      />
+                    </span>
+                    {availability.label}
                   </span>
-                  {availability.label}
-                </span>
-                <span className="text-2xl leading-none text-stone-500">›</span>
+                  <span className="text-2xl leading-none text-stone-500">›</span>
+                </div>
               </div>
+              <p className="mt-2 text-[11px] font-semibold text-slate-500">
+                {priceVerificationLabel}
+              </p>
             </div>
             </button>
           )

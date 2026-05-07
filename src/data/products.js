@@ -105,6 +105,20 @@ const dimensionFramingLumberRows = [
   ['80009', "2x12-10 Select Structural Fir", '2 in x 12 in x 10 ft', 'Select Structural Fir', 20],
 ]
 
+function getDimensionFramingImage(name) {
+  const normalizedName = name.toLowerCase()
+
+  if (normalizedName.includes('2x4') && normalizedName.includes('redwood')) {
+    return '/product-images/24conheart.png'
+  }
+
+  if (normalizedName.includes('2x6') && normalizedName.includes('redwood')) {
+    return '/product-images/26conheart.png'
+  }
+
+  return '/product-images/dimensional-lumber.jpg'
+}
+
 const dimensionFramingLumberProducts = dimensionFramingLumberRows.map(
   ([stockSku, name, dimensions, grade, stock]) => ({
     id: `dimension-${stockSku}`,
@@ -120,7 +134,7 @@ const dimensionFramingLumberProducts = dimensionFramingLumberRows.map(
     unit: 'each',
     stock,
     location: 'Dimension Framing Lumber',
-    image: '/product-images/dimensional-lumber.jpg',
+    image: getDimensionFramingImage(name),
     aliases: [stockSku, name],
   }),
 )
@@ -259,10 +273,95 @@ const deckingProducts = [
   aliases: ['decking', 'deck boards', 'deck material', ...product.aliases],
 }))
 
+const concreteGradeNote =
+  'Sacked concrete is useful for posts, small slabs, footings, repairs, and jobsite work where ready-to-use bags are easier than ordering a truck.'
+
+const concreteGradeTooltip =
+  '4000 PSI ready mix is a common general-purpose strength. Fast-setting mix is used when the customer needs the concrete to set quickly, such as setting posts or making time-sensitive repairs.'
+
+const concreteProducts = [
+  {
+    id: 'concrete-60-ready-mix',
+    name: '60 lb Ready Mix Concrete',
+    dimensions: '60 lb bag',
+    grade: '4000 PSI',
+    price: 5.49,
+    stock: 168,
+    aliases: [
+      '#60 concrete',
+      '60 concrete',
+      '60lb concrete',
+      '60 lb concrete',
+      '60 pound concrete',
+      '60lbs ready mix',
+      '60 lb ready mix concrete',
+      'ready mix concrete 60',
+      '4000 psi concrete',
+    ],
+  },
+  {
+    id: 'concrete-80-ready-mix',
+    name: '80 lb Ready Mix Concrete',
+    dimensions: '80 lb bag',
+    grade: '4000 PSI',
+    price: 6.89,
+    stock: 132,
+    aliases: [
+      '80 concrete',
+      '80lb concrete',
+      '80 lb concrete',
+      '80 pound concrete',
+      '80lbs ready mix',
+      '80 lb ready mix concrete',
+      'ready mix concrete 80',
+      '4000 psi concrete 80',
+    ],
+  },
+  {
+    id: 'concrete-50-fast-set',
+    name: '50 lb Fast Setting Ready Mix Concrete',
+    dimensions: '50 lb bag',
+    grade: '20 minute fast set',
+    price: 7.95,
+    stock: 84,
+    aliases: [
+      '50 concrete',
+      '50lb concrete',
+      '50 lb concrete',
+      '50 pound concrete',
+      'fast ready mix',
+      'fast setting concrete',
+      'fast set concrete',
+      '20 minute concrete',
+      '20 min concrete',
+      '50 lb fast ready mix',
+      '50lbs fast ready mix 20mins',
+    ],
+  },
+].map((product) => ({
+  category: 'Concrete & Sacked Goods',
+  gradeNote: concreteGradeNote,
+  gradeTooltip: concreteGradeTooltip,
+  unit: 'bag',
+  location: 'Sacked Goods',
+  image: '/product-images/concrete-bag.svg',
+  ...product,
+  aliases: [
+    'concrete',
+    'ready mix',
+    'ready mix concrete',
+    'sacked goods',
+    'bag concrete',
+    'bagged concrete',
+    ...product.aliases,
+  ],
+}))
+
 export const products = [
   ...dimensionFramingLumberProducts,
   ...beamProducts,
   ...deckingProducts,
+  ...concreteProducts,
   {
     id: 'dfl-2x4x8',
     name: '2x4-8 #1 DF-L',
@@ -554,7 +653,7 @@ export const products = [
       label: '1-3 day lead time',
     },
     location: 'Available by order',
-    image: '/product-images/dimensional-lumber.jpg',
+    image: '/product-images/44conheart.jpeg',
     aliases: [
       'redwood',
       'redwood post',
@@ -610,7 +709,7 @@ export const products = [
     unit: 'sheet',
     stock: 128,
     location: 'Warehouse Bay 6',
-    image: '/product-images/zip-716.avif',
+    image: '/product-images/osb-sheathing.avif',
     aliases: ['7/16 osb', 'osb', 'osb sheathing', '716 osb', '4x8 osb'],
   },
   {
@@ -627,7 +726,7 @@ export const products = [
     unit: 'sheet',
     stock: 76,
     location: 'Warehouse Bay 6',
-    image: '/product-images/zip-58.avif',
+    image: '/product-images/osb-sheathing.avif',
     aliases: ['19/32 osb', '1932 osb', 'osb 19/32', 'osb 1932'],
   },
   {
@@ -644,7 +743,7 @@ export const products = [
     unit: 'sheet',
     stock: 64,
     location: 'Warehouse Bay 6',
-    image: '/product-images/advantech.avif',
+    image: '/product-images/osb-sheathing.avif',
     aliases: ['5/8 osb', '58 osb', 'osb 5/8', 'osb 58'],
   },
   {
@@ -661,7 +760,7 @@ export const products = [
     unit: 'sheet',
     stock: 52,
     location: 'Warehouse Bay 7',
-    image: '/product-images/advantech.avif',
+    image: '/product-images/osb-sheathing.avif',
     aliases: ['3/4 t&g', '3/4 tg', '34 tg', '34 t&g', '3/4 osb t&g', '3/4 osb tg'],
   },
   {

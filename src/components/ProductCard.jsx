@@ -1,11 +1,25 @@
 import { useState } from 'react'
 import { getAvailability } from '../utils/availability'
+import { getPriceVerificationLabel } from '../utils/priceVerification'
 
 function ProductCard({ onAddToQuote, product, quoteQuantity = 0 }) {
+  const [isAddAnimating, setIsAddAnimating] = useState(false)
   const [isGradeOpen, setIsGradeOpen] = useState(false)
   const [isImageOpen, setIsImageOpen] = useState(false)
   const internalSku = product.stockSku || product.id.toUpperCase()
   const availability = getAvailability(product)
+  const priceVerificationLabel = getPriceVerificationLabel(product)
+
+  function handleAddToQuote() {
+    if (!product.price) {
+      onAddToQuote(product)
+      return
+    }
+
+    setIsAddAnimating(true)
+    window.setTimeout(() => setIsAddAnimating(false), 540)
+    onAddToQuote(product)
+  }
 
   return (
     <article className="rounded-lg border border-stone-200 bg-white shadow-sm">
@@ -89,6 +103,9 @@ function ProductCard({ onAddToQuote, product, quoteQuantity = 0 }) {
                 / {product.unit}
               </span>
             </p>
+            <p className="mt-2 inline-flex rounded bg-slate-100 px-2.5 py-1.5 text-xs font-bold text-slate-700 ring-1 ring-slate-200">
+              {priceVerificationLabel}
+            </p>
           </div>
           <div className="text-right text-sm text-stone-600">
             <p className="font-semibold text-stone-900">
@@ -100,15 +117,24 @@ function ProductCard({ onAddToQuote, product, quoteQuantity = 0 }) {
 
         <div className="grid grid-cols-2 gap-3">
           <button
-            className="rounded-md bg-[#FC2C38] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#de1f2b] focus:outline-none focus:ring-4 focus:ring-red-200"
-            onClick={() => onAddToQuote(product)}
+            className={`rounded-md bg-[#FC2C38] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#de1f2b] focus:outline-none focus:ring-4 focus:ring-red-200 ${
+              isAddAnimating ? 'animate-quote-pop' : ''
+            }`}
+            onClick={handleAddToQuote}
             type="button"
           >
-            {quoteQuantity ? `Added (${quoteQuantity})` : 'Add to quote'}
+            {isAddAnimating
+              ? 'Added to quote'
+              : quoteQuantity
+                ? `Added (${quoteQuantity})`
+                : 'Add to quote'}
           </button>
-          <button className="rounded-md border border-[#FC2C38] px-4 py-2.5 text-sm font-semibold text-[#FC2C38] transition hover:bg-red-50 focus:outline-none focus:ring-4 focus:ring-red-200">
-            Call counter
-          </button>
+          <a
+            className="rounded-md border border-[#FC2C38] px-4 py-2.5 text-center text-sm font-semibold text-[#FC2C38] transition hover:bg-red-50 focus:outline-none focus:ring-4 focus:ring-red-200"
+            href="tel:2083435481"
+          >
+            Call 208-343-5481
+          </a>
         </div>
       </div>
       {isImageOpen ? (

@@ -117,6 +117,10 @@ export function getFoundReplyText(prompt, matchedProducts) {
     return 'Yes, we stock decking material options across composite, PVC, thermally modified wood, and natural wood. I pulled the main lines so customers can compare brand, species, and style before we confirm color and lengths.'
   }
 
+  if (allProductsAre(matchedProducts, 'Concrete & Sacked Goods')) {
+    return 'Yes, we stock concrete and sacked goods. We carry 60 lb and 80 lb 4000 PSI ready mix, plus a 50 lb fast-setting ready mix when the job needs a quicker set.'
+  }
+
   return 'Yes, we stock a few options that match that ask. Here are the closest products I found.'
 }
 
@@ -165,6 +169,16 @@ export function getRecommendationProducts(prompt, products) {
 
   if (normalizedPrompt.includes('deck')) {
     return products.filter((product) => product.category === 'Decking').slice(0, 4)
+  }
+
+  if (
+    normalizedPrompt.includes('concrete') ||
+    normalizedPrompt.includes('readymix') ||
+    normalizedPrompt.includes('sackedgoods')
+  ) {
+    return products
+      .filter((product) => product.category === 'Concrete & Sacked Goods')
+      .slice(0, 4)
   }
 
   if (normalizedPrompt.includes('treated') || normalizedPrompt.includes('post')) {

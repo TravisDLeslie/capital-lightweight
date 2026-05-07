@@ -110,7 +110,10 @@ function parseCalculationRequests(prompt) {
 }
 
 function hasPricingIntent(prompt) {
-  return /\b(price|pricing|cost|total|quote|estimate|how much|howmuch)\b/i.test(prompt)
+  return (
+    /\b(price|pricing|cost|total|quote|estimate|how much|howmuch)\b/i.test(prompt) ||
+    (/\bwhat(?:'s| is)?\b/i.test(prompt) && parseCalculationRequests(prompt).length > 0)
+  )
 }
 
 function getUnitScore(requestedUnit, productUnit) {

@@ -59,6 +59,124 @@ function getNextOpenText(date) {
 
 export function getGeneralQuestionReply(prompt, now = new Date()) {
   const normalizedPrompt = normalizeQuery(prompt)
+  const isAboutQuestion = [
+    'aboutus',
+    'ourstory',
+    'history',
+    'founded',
+    'founding',
+    'howlong',
+    'howlonghaveyou',
+    'around',
+    'started',
+    'startedin',
+    'whatyear',
+    'capitalhistory',
+  ].some((term) => normalizedPrompt.includes(term))
+
+  if (isAboutQuestion) {
+    return {
+      text: 'Capital Lumber has been building Boise since 1905. What started as a small yard on Main Street has grown into one of Idaho’s trusted names in lumber and building materials. Today, the Perrin family is carrying the yard into its next chapter with the same old-school values: hard work, integrity, community, and genuine connection.',
+      image: {
+        alt: 'Historic Capital Lumber storefront',
+        src: '/capital-history.avif',
+      },
+      link: {
+        label: 'Read our story',
+        url: 'https://www.capitallumber.co/our-story',
+      },
+    }
+  }
+
+  const isTakeoffQuestion =
+    [
+      'materiallist',
+      'materiallists',
+      'materialslist',
+      'takeoff',
+      'takeoffs',
+      'takelist',
+      'makelist',
+      'plans',
+      'prints',
+      'blueprints',
+      'pdfplans',
+      'planquote',
+      'quoteplans',
+      'quotefromplans',
+      'lumberlist',
+    ].some((term) => normalizedPrompt.includes(term)) &&
+    (normalizedPrompt.includes('quote') ||
+      normalizedPrompt.includes('list') ||
+      normalizedPrompt.includes('takeoff') ||
+      normalizedPrompt.includes('plans') ||
+      normalizedPrompt.includes('prints') ||
+      normalizedPrompt.includes('pdf'))
+
+  if (isTakeoffQuestion) {
+    return {
+      text: 'Yes, we do material lists and takeoffs from plans. Please send a PDF of the plans/prints, including structurals if you have them, to dane@capitallumber.co.',
+      link: {
+        label: 'Email plans to Dane',
+        url: 'mailto:dane@capitallumber.co?subject=Plans%20for%20Material%20List',
+      },
+    }
+  }
+
+  const isPaymentQuestion = [
+    'payment',
+    'pay',
+    'paid',
+    'cash',
+    'venmo',
+    'creditcard',
+    'card',
+    'phonepayment',
+    'payoverphone',
+    'paybyphone',
+    'check',
+    'cheque',
+    'invoice',
+    'billing',
+  ].some((term) => normalizedPrompt.includes(term))
+
+  if (isPaymentQuestion) {
+    return {
+      text: 'We take cash, Venmo, credit card in person, credit card over the phone, and check. Please note that with a check, we will not ship or release delivery until the check fully clears. You can always give us a call at 208-343-5481.',
+      link: {
+        label: 'Call 208-343-5481',
+        url: 'tel:2083435481',
+      },
+    }
+  }
+
+  const isContractorQuestion = [
+    'contractor',
+    'contractors',
+    'builder',
+    'builders',
+    'proaccount',
+    'contractoraccount',
+    'accountsetup',
+    'specialpricing',
+    'contractorpricing',
+    'propricing',
+    'net30',
+    'terms',
+    'creditaccount',
+    'chargeaccount',
+  ].some((term) => normalizedPrompt.includes(term))
+
+  if (isContractorQuestion) {
+    return {
+      text: 'Yes, we offer contractor services. Approved contractors can get special pricing, Net 30 day terms, and the things contractors are usually looking for. To get a contractor account set up, please give us a call at 208-343-5481 or email accounting@capitallumber.co.',
+      link: {
+        label: 'Email accounting',
+        url: 'mailto:accounting@capitallumber.co?subject=Contractor%20Account%20Setup',
+      },
+    }
+  }
+
   const isDirectionsQuestion = [
     'directions',
     'direction',
