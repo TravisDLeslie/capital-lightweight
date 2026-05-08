@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 220" role="img" aria-label="WUI decking">
+  <rect width="320" height="220" fill="#f8f2ef"/>
+  <g transform="translate(42 52)">
+    <rect x="0" y="0" width="236" height="34" rx="4" fill="#7a6d64"/>
+    <rect x="0" y="46" width="236" height="34" rx="4" fill="#b8a28f"/>
+    <path d="M198 88c20-15 27-31 17-49 24 18 38 39 31 62-7 21-29 29-48 20 11-8 13-19 0-33z" fill="#fc2c38" opacity=".88"/>
+    <path d="M20 17h145M20 63h145" stroke="#fff" stroke-width="3" opacity=".24"/>
+  </g>
+  <text x="42" y="190" fill="#5a463b" font-family="Arial, sans-serif" font-size="22" font-weight="700">WUI / fire-rated</text>
+</svg>

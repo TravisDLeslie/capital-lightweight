@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 220" role="img" aria-label="Redwood deck boards">
+  <rect width="320" height="220" fill="#fff6f1"/>
+  <g transform="translate(36 46) skewY(-6)">
+    <rect x="0" y="0" width="248" height="34" rx="3" fill="#b85f42"/>
+    <rect x="0" y="43" width="248" height="34" rx="3" fill="#cf7651"/>
+    <rect x="0" y="86" width="248" height="34" rx="3" fill="#a94e38"/>
+    <path d="M18 14c42 9 82 7 124-4M24 56c58-8 109-5 174 8M22 100c48 8 103 5 168-5" fill="none" stroke="#6f2d22" stroke-width="4" opacity=".35"/>
+  </g>
+  <text x="40" y="190" fill="#743224" font-family="Arial, sans-serif" font-size="22" font-weight="700">Redwood 2x6</text>
+</svg>

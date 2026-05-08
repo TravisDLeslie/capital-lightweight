@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 220" role="img" aria-label="Square edge deck board">
+  <rect width="320" height="220" fill="#f5f5f3"/>
+  <g transform="translate(42 76)">
+    <rect x="0" y="0" width="236" height="54" rx="2" fill="#9a7f65"/>
+    <path d="M20 16h196M20 36h196" stroke="#fff" stroke-width="3" opacity=".22"/>
+  </g>
+  <text x="62" y="176" fill="#4a3828" font-family="Arial, sans-serif" font-size="22" font-weight="700">Square edge</text>
+</svg>

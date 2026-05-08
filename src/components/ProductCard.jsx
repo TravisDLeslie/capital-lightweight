@@ -9,7 +9,7 @@ function ProductCard({
   quoteQuantity = 0,
 }) {
   const [isAddAnimating, setIsAddAnimating] = useState(false)
-  const [isGradeOpen, setIsGradeOpen] = useState(false)
+  const [isGradeOpen, setIsGradeOpen] = useState(true)
   const [isImageOpen, setIsImageOpen] = useState(false)
   const internalSku = product.stockSku || product.id.toUpperCase()
   const availability = getAvailability(product)

@@ -6,6 +6,11 @@ import ProductCard from './ProductCard'
 import QuoteDrawer from './QuoteDrawer'
 import SuggestedPrompts from './SuggestedPrompts'
 import {
+  continueDeckingCalculator,
+  isDeckingCalculatorStart,
+  startDeckingCalculator,
+} from '../chat/deckingCalculator'
+import {
   continueFenceCalculator,
   isFenceCalculatorStart,
   startFenceCalculator,
@@ -52,6 +57,7 @@ function ChatHome() {
     defaultQuoteSection.id,
   )
   const [lastQuoteLines, setLastQuoteLines] = useState([])
+  const [deckingCalculatorState, setDeckingCalculatorState] = useState(null)
   const [fenceCalculatorState, setFenceCalculatorState] = useState(null)
   const [isAwaitingDeliveryLocation, setIsAwaitingDeliveryLocation] =
     useState(false)
@@ -203,7 +209,12 @@ function ChatHome() {
       .join(', ')
   }
 
-  function showAssistantReply(nextMessages, reply, nextFenceState) {
+  function showAssistantReply(
+    nextMessages,
+    reply,
+    nextFenceState,
+    nextDeckingState = deckingCalculatorState,
+  ) {
     const replyMessageId = crypto.randomUUID()
 
     setSelectedProduct(reply.selectedProduct)
@@ -248,6 +259,7 @@ function ChatHome() {
     })
 
     setFenceCalculatorState(nextFenceState)
+    setDeckingCalculatorState(nextDeckingState)
     setIsAwaitingDeliveryLocation(Boolean(reply.deliveryPrompt))
   }
 
@@ -314,6 +326,7 @@ function ChatHome() {
         : null
 
     if (fenceCalculatorResult) {
+      setDeckingCalculatorState(null)
       trackSessionEvent({
         eventType: 'chat_prompt',
         prompt: cleanPrompt,
@@ -328,6 +341,35 @@ function ChatHome() {
         nextMessages,
         fenceCalculatorResult.reply,
         fenceCalculatorResult.state,
+        null,
+      )
+      setInput('')
+      return
+    }
+
+    const deckingCalculatorResult = deckingCalculatorState
+      ? continueDeckingCalculator(cleanPrompt, deckingCalculatorState)
+      : isDeckingCalculatorStart(cleanPrompt)
+        ? startDeckingCalculator(cleanPrompt)
+        : null
+
+    if (deckingCalculatorResult) {
+      setFenceCalculatorState(null)
+      trackSessionEvent({
+        eventType: 'chat_prompt',
+        prompt: cleanPrompt,
+        responseType: 'decking_calculator',
+        matchedProducts: deckingCalculatorResult.reply.products.map(
+          (product) => product.name,
+        ),
+        quoteTitle,
+        quoteTotal: quoteSubtotal,
+      })
+      showAssistantReply(
+        nextMessages,
+        deckingCalculatorResult.reply,
+        null,
+        deckingCalculatorResult.state,
       )
       setInput('')
       return
@@ -364,6 +406,7 @@ function ChatHome() {
     setMessages(starterMessages)
     setSelectedProduct(defaultProduct)
     setLastQuoteLines([])
+    setDeckingCalculatorState(null)
     setFenceCalculatorState(null)
     setIsAwaitingDeliveryLocation(false)
     setIsMobileProductOpen(false)

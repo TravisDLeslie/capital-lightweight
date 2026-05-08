@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 220" role="img" aria-label="Grooved deck board">
+  <rect width="320" height="220" fill="#f5f5f3"/>
+  <g transform="translate(42 76)">
+    <rect x="0" y="0" width="236" height="54" rx="5" fill="#8d8071"/>
+    <rect x="0" y="18" width="236" height="9" fill="#5d554c" opacity=".8"/>
+    <rect x="0" y="31" width="236" height="9" fill="#5d554c" opacity=".8"/>
+    <path d="M20 8h196M20 46h196" stroke="#fff" stroke-width="3" opacity=".22"/>
+  </g>
+  <text x="58" y="176" fill="#3f3933" font-family="Arial, sans-serif" font-size="22" font-weight="700">Grooved edge</text>
+</svg>

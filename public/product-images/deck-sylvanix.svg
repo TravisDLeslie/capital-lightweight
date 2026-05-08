@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 220" role="img" aria-label="Sylvanix decking">
+  <rect width="320" height="220" fill="#f3f6f1"/>
+  <g transform="translate(36 48)">
+    <rect x="0" y="0" width="248" height="30" rx="4" fill="#59675b"/>
+    <rect x="0" y="42" width="248" height="30" rx="4" fill="#7d876f"/>
+    <rect x="0" y="84" width="248" height="30" rx="4" fill="#485348"/>
+    <path d="M18 15h210M18 57h210M18 99h210" stroke="#fff" stroke-width="3" opacity=".2"/>
+  </g>
+  <text x="38" y="190" fill="#344034" font-family="Arial, sans-serif" font-size="22" font-weight="700">Sylvanix composite</text>
+</svg>

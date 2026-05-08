@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 220" role="img" aria-label="Cedar deck boards">
+  <rect width="320" height="220" fill="#fff9ee"/>
+  <g transform="translate(38 48) skewY(-7)">
+    <rect x="0" y="0" width="236" height="32" rx="3" fill="#d19a58"/>
+    <rect x="0" y="42" width="236" height="32" rx="3" fill="#e0b276"/>
+    <rect x="0" y="84" width="236" height="32" rx="3" fill="#c08348"/>
+    <path d="M20 12c46 8 91 8 138-2M22 54c62-7 116-3 174 6M18 96c54 10 112 8 178-3" fill="none" stroke="#7e512c" stroke-width="4" opacity=".35"/>
+  </g>
+  <text x="42" y="190" fill="#6c4426" font-family="Arial, sans-serif" font-size="22" font-weight="700">Cedar deck boards</text>
+</svg>

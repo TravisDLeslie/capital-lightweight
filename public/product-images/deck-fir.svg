@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 220" role="img" aria-label="Fir deck boards">
+  <rect width="320" height="220" fill="#f7f2e8"/>
+  <g transform="translate(38 48) skewY(-8)">
+    <rect x="0" y="0" width="232" height="34" rx="3" fill="#d9a665"/>
+    <rect x="0" y="42" width="232" height="34" rx="3" fill="#c98f4e"/>
+    <rect x="0" y="84" width="232" height="34" rx="3" fill="#e1b06f"/>
+    <path d="M18 12c34 10 70 10 108-2M28 55c44-8 92-6 146 6M20 98c62 12 118 10 170-3" fill="none" stroke="#8d5b2f" stroke-width="4" opacity=".42"/>
+  </g>
+  <text x="42" y="190" fill="#5c3b1f" font-family="Arial, sans-serif" font-size="22" font-weight="700">Fir deck boards</text>
+</svg>

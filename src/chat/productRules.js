@@ -1,13 +1,6 @@
 import { normalizeQuery } from '../utils/productSearch.js'
 import { getAvailability } from '../utils/availability.js'
 
-const defaultRecommendationIds = [
-  'dfl-2x4x8',
-  'dfl-2x4x10',
-  'osb-716',
-  'simpson-a35z',
-]
-
 function allProductsAre(products, category) {
   return products.every((product) => product.category === category)
 }
@@ -56,6 +49,7 @@ function getRequestedItemLabel(prompt) {
 
 export function getFoundReplyText(prompt, matchedProducts) {
   const normalizedPrompt = normalizeQuery(prompt)
+
   const isTwoByFourQuestion =
     normalizedPrompt.includes('2x4') &&
     matchedProducts.length > 1 &&
@@ -79,6 +73,7 @@ export function getFoundReplyText(prompt, matchedProducts) {
 
     if (availability.type === 'custom-order') {
       const leadTime = availability.label.replace(' custom order', 's')
+
       return `${product.name} is handled as a custom order. Typical lead time is ${leadTime}, and the counter can help confirm profile, species, and pricing.`
     }
 
@@ -102,7 +97,7 @@ export function getFoundReplyText(prompt, matchedProducts) {
   }
 
   if (allProductsAre(matchedProducts, 'Structural Hardware')) {
-    return 'Yes, we stock common Simpson Strong-Tie hardware. Here are the closest hanger and connector options we have in the sample catalog.'
+    return 'Yes, we stock common Simpson Strong-Tie hardware. Here are the closest hanger and connector options we have in the online product list.'
   }
 
   if (allProductsAre(matchedProducts, 'Holdowns & Tension Ties')) {
@@ -135,9 +130,14 @@ export function getRecommendationProducts(prompt, products) {
     normalizedPrompt.includes('plywood') ||
     normalizedPrompt.includes('sheet') ||
     normalizedPrompt.includes('panel') ||
-    normalizedPrompt.includes('subfloor')
+    normalizedPrompt.includes('subfloor') ||
+    normalizedPrompt.includes('osb') ||
+    normalizedPrompt.includes('zip') ||
+    normalizedPrompt.includes('advantech')
   ) {
-    return products.filter((product) => product.category === 'Sheet Goods').slice(0, 4)
+    return products
+      .filter((product) => product.category === 'Sheet Goods')
+      .slice(0, 4)
   }
 
   if (
@@ -156,7 +156,8 @@ export function getRecommendationProducts(prompt, products) {
   if (
     normalizedPrompt.includes('hanger') ||
     normalizedPrompt.includes('simpson') ||
-    normalizedPrompt.includes('strongtie')
+    normalizedPrompt.includes('strongtie') ||
+    normalizedPrompt.includes('connector')
   ) {
     return products
       .filter((product) => product.category === 'Structural Hardware')
@@ -168,12 +169,16 @@ export function getRecommendationProducts(prompt, products) {
     normalizedPrompt.includes('timber') ||
     normalizedPrompt.includes('joist') ||
     normalizedPrompt.includes('lvl') ||
-    normalizedPrompt.includes('tji')
+    normalizedPrompt.includes('tji') ||
+    normalizedPrompt.includes('microllam')
   ) {
-    const beamProducts = products.filter((product) => product.category === 'Timbers & Beams')
+    const beamProducts = products.filter(
+      (product) => product.category === 'Timbers & Beams',
+    )
 
     if (
-      (normalizedPrompt.includes('beam') || normalizedPrompt.includes('timber')) &&
+      (normalizedPrompt.includes('beam') ||
+        normalizedPrompt.includes('timber')) &&
       beamProducts.length
     ) {
       return beamProducts.slice(0, 4)
@@ -184,35 +189,57 @@ export function getRecommendationProducts(prompt, products) {
       .slice(0, 4)
   }
 
-  if (normalizedPrompt.includes('deck')) {
-    return products.filter((product) => product.category === 'Decking').slice(0, 4)
+  if (
+    normalizedPrompt.includes('deck') ||
+    normalizedPrompt.includes('decking') ||
+    normalizedPrompt.includes('trex') ||
+    normalizedPrompt.includes('timbertech') ||
+    normalizedPrompt.includes('cedar') ||
+    normalizedPrompt.includes('redwood')
+  ) {
+    return products
+      .filter((product) => product.category === 'Decking')
+      .slice(0, 4)
   }
 
   if (
     normalizedPrompt.includes('concrete') ||
     normalizedPrompt.includes('readymix') ||
-    normalizedPrompt.includes('sackedgoods')
+    normalizedPrompt.includes('sackedgoods') ||
+    normalizedPrompt.includes('cement') ||
+    normalizedPrompt.includes('sakrete')
   ) {
     return products
       .filter((product) => product.category === 'Concrete & Sacked Goods')
       .slice(0, 4)
   }
 
-  if (normalizedPrompt.includes('treated') || normalizedPrompt.includes('post')) {
-    return products.filter((product) => product.category === 'Treated Lumber').slice(0, 4)
+  if (
+    normalizedPrompt.includes('treated') ||
+    normalizedPrompt.includes('pressuretreated') ||
+    normalizedPrompt.includes('post') ||
+    normalizedPrompt.includes('fence')
+  ) {
+    return products
+      .filter((product) => product.category === 'Treated Lumber')
+      .slice(0, 4)
   }
 
-  return defaultRecommendationIds
-    .map((id) => products.find((product) => product.id === id))
-    .filter(Boolean)
+  return []
 }
 
-export function getNotFoundReplyText(prompt, recommendations) {
+export function getNotFoundReplyText(prompt, recommendations = []) {
   const requestedItemLabel = getRequestedItemLabel(prompt)
+  const hasRecommendations = recommendations.length > 0
+
+  if (!hasRecommendations) {
+    return `I’m not seeing "${requestedItemLabel}" in our online product list yet. That does not always mean we cannot get it. Give us a call at 208-343-5481, email travis@capitallumber.co, or stop by the yard and we can check stock, special order options, and current pricing.`
+  }
+
   const recommendationNames = recommendations
     .slice(0, 3)
     .map((product) => product.name)
     .join(', ')
 
-  return `I do not see "${requestedItemLabel}" in this sample catalog yet. The closest things I would check first are ${recommendationNames}.`
+  return `I’m not seeing an exact match for "${requestedItemLabel}" in our online product list yet. The closest stocked items I would check first are ${recommendationNames}. If that is not what you need, give us a call at 208-343-5481 or email travis@capitallumber.co and we can check stock, special order options, and current pricing.`
 }
