@@ -1,0 +1,64 @@
+{
+  "rugby": {
+    "name": "Rugby Statement",
+    "referencePdf": "/admin-samples/rugby-statement-sample-boxed.pdf",
+    "referenceImage": "/admin-samples/rugby-statement-sample-boxed.png",
+    "pageSize": {
+      "width": 612,
+      "height": 792
+    },
+    "coordinateSystem": "top-left",
+    "zones": {
+      "invoiceDate": {
+        "x": 18,
+        "y": 252,
+        "width": 52,
+        "height": 168
+      },
+      "invoiceNumber": {
+        "x": 72,
+        "y": 252,
+        "width": 94,
+        "height": 168
+      },
+      "grossAmount": {
+        "x": 220,
+        "y": 252,
+        "width": 92,
+        "height": 168
+      }
+    },
+    "notes": "Only read the red boxed columns: Invoice Date, Invoice Number, and Gross Amount."
+  },
+  "boiseCascade": {
+    "name": "Boise Cascade Statement",
+    "referencePdf": "/admin-samples/boise-cascade-statement-sample.pdf",
+    "referenceImage": "/admin-samples/boise-cascade-statement-sample.png",
+    "pageSize": {
+      "width": 612,
+      "height": 792
+    },
+    "coordinateSystem": "top-left",
+    "zones": {
+      "invoiceDate": {
+        "x": 18,
+        "y": 252,
+        "width": 52,
+        "height": 468
+      },
+      "invoiceNumber": {
+        "x": 72,
+        "y": 252,
+        "width": 94,
+        "height": 468
+      },
+      "grossAmount": {
+        "x": 220,
+        "y": 252,
+        "width": 92,
+        "height": 468
+      }
+    },
+    "notes": "Same grid as Rugby. Read Invoice Date, Invoice Number, and Gross Amount from all pages."
+  }
+}

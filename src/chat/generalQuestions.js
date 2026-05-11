@@ -16,7 +16,6 @@ const saturdayCloseMinutes = 16 * 60
 const storeAddress =
   'Capital Lumber Co., 3105 W. State St. Boise, ID 83703'
 
-const phoneNumber = '208-343-5481'
 const phoneUrl = 'tel:2083435481'
 
 const directionsUrl =

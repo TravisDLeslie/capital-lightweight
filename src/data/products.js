@@ -81,8 +81,8 @@ const engineeredProducts = [
 
 const fenceProducts = [
   {
-    id: 'japanese-no-hole-fence-picket',
-    stockSku: 'FENCE-PICKET-JPN-34',
+    id: '1789',
+    stockSku: '1789',
     name: 'Japanese #1 3/4 in No Hole Fence Picket',
     category: 'Fencing',
     dimensions: '3/4 in fence picket',
@@ -116,16 +116,12 @@ const dimensionFramingLumberNote =
   'This is dimensional framing lumber used for structural framing, trim-out, appearance work, or specialty wood applications depending on the grade and species.'
 
 const dimensionFramingLumberRows = [
-  ['278', '2x2-4 #2 & BTR Fir S4S', '2 in x 2 in x 4 ft', '#2 & Better Fir S4S', 34],
+  
   ['28', '2x10-20 #2 & BTR Fir KD', '2 in x 10 in x 20 ft', '#2 & Better Fir KD', 18],
   ['45275', "4x4-10 S4S FOH/FOW #1 Fir", '4 in x 4 in x 10 ft', '#1 Fir', 16],
-  ['4830', '2x6-20 T&G Doug Fir Appearance', '2 in x 6 in x 20 ft', 'Doug Fir Appearance', 22],
   ['52572', "4x4-8 S4S FOH/FOW #1 Fir", '4 in x 4 in x 8 ft', '#1 Fir', 24],
-  ['63', '2x8-12 #2 & BTR Fir Log Cabin', '2 in x 8 in x 12 ft', '#2 & Better Fir', 18],
-  ['64', '2x8-14 #2 & BTR Fir Log Cabin', '2 in x 8 in x 14 ft', '#2 & Better Fir', 16],
   ['6473', "2x4-12 Con Heart Redwood", '2 in x 4 in x 12 ft', 'Construction Heart Redwood', 12],
   ['6474', '2x6-12 Con Heart Redwood', '2 in x 6 in x 12 ft', 'Construction Heart Redwood', 12],
-  ['69', '2x8-16 #2 & BTR Fir Log Cabin', '2 in x 8 in x 16 ft', '#2 & Better Fir', 14],
   ['7885', '2x6-16 Con Heart Redwood', '2 in x 6 in x 16 ft', 'Construction Heart Redwood', 10],
   ['80003', "2x12-16 Select Structural Fir", '2 in x 12 in x 16 ft', 'Select Structural Fir', 16],
   ['80004', "2x12-20 Select Structural Fir", '2 in x 12 in x 20 ft', 'Select Structural Fir', 14],
@@ -170,6 +166,74 @@ const dimensionFramingLumberProducts = dimensionFramingLumberRows.map(
   }),
 )
 
+const pressureTreatedGradeNote =
+  'Pressure-treated Douglas Fir is treated for exterior exposure and ground-contact-adjacent building uses where decay resistance matters. Confirm the treatment rating and intended use before installing.'
+
+const pressureTreatedGradeTooltip =
+  'CAC .15 is a copper azole treatment level. It is commonly used where treated framing is needed for decks, exterior framing, plates, sleepers, and other moisture-exposed applications.'
+
+const pressureTreatedRows = [
+  ['5429', '2x4-8 D.F. Treated CAC .15', '2 in x 4 in x 8 ft', 8.13, 188],
+  ['9193', '2x4-10 D.F. Treated CAC .15', '2 in x 4 in x 10 ft', 10.17, 210],
+  ['8658', '2x4-12 D.F. Treated CAC .15', '2 in x 4 in x 12 ft', 12.2, 323],
+  ['6447', '2x4-16 D.F. Treated CAC .15', '2 in x 4 in x 16 ft', 16.27, 328],
+  ['8658', '2x6-8 D.F. Treated CAC .15', '2 in x 6 in x 8 ft', 13.57, 169],
+  ['8658', '2x6-10 D.F. Treated CAC .15', '2 in x 6 in x 10 ft', 16.96, 143],
+  ['6599', '2x6-12 D.F. Treated CAC .15', '2 in x 6 in x 12 ft', 20.36, 194],
+  ['6564', '2x6-16 D.F. Treated CAC .15', '2 in x 6 in x 16 ft', 27.14, 170],
+  ['9231', '2x8-12 D.F. Treated CAC .15', '2 in x 8 in x 12 ft', 22.46, 209],
+  ['9231', '2x8-16 D.F. Treated CAC .15', '2 in x 8 in x 16 ft', 29.95, 174],
+  ['2894', '2x10-12 D.F. Treated CAC .15', '2 in x 10 in x 12 ft', 34.12, 108],
+  ['2894', '2x10-16 D.F. Treated CAC .15', '2 in x 10 in x 16 ft', 45.95, 52],
+  ['6736', '2x12-12 D.F. Treated CAC .15', '2 in x 12 in x 12 ft', 43.15, 26],
+  ['6748', '2x12-12 D.F. Treated CAC .15', '2 in x 12 in x 12 ft', 57.54, 58],
+  ['9129', '4x4-8 D.F. Treated CAC .15', '4 in x 4 in x 8 ft', 20.4, 92],
+  ['9146', '4x4-10 D.F. Treated CAC .15', '4 in x 4 in x 10 ft', 25.5, 36],
+  ['161', '6x6-16 D.F. Treated CAC .15', '6 in x 6 in x 16 ft', 109.34, 36],
+  ['161', '6x6-20 D.F. Treated CAC .15', '6 in x 6 in x 20 ft', 136.68, 22],
+]
+
+const pressureTreatedProducts = pressureTreatedRows.map(
+  ([stockSku, name, dimensions, price, stock]) => {
+    const sizeWithLength = name.split(' ')[0]
+    const baseSize = sizeWithLength.replace(/-\d+$/, '')
+
+    return {
+      id: `treated-${stockSku}-${sizeWithLength.toLowerCase()}`,
+      stockSku,
+      name,
+      category: 'Pressure Treated Lumber',
+      dimensions,
+      grade: 'D.F. Treated CAC .15',
+      gradeNote: pressureTreatedGradeNote,
+      gradeTooltip: pressureTreatedGradeTooltip,
+      price,
+      unit: 'each',
+      stock,
+      location: 'Pressure Treated Rack',
+      image: '/product-images/pressure-treated-lumber.jpg',
+      aliases: [
+        stockSku,
+        name,
+        name.replaceAll('-', ' '),
+        sizeWithLength,
+        baseSize,
+        `${sizeWithLength} treated`,
+        `${baseSize} treated`,
+        `${sizeWithLength} pressure treated`,
+        `${baseSize} pressure treated`,
+        `${sizeWithLength} pt`,
+        `${baseSize} pt`,
+        'pressure treated',
+        'treated lumber',
+        'pt lumber',
+        'cac .15',
+        'copper azole',
+      ],
+    }
+  },
+)
+
 const beamGradeNote =
   'Beams and timbers are chosen for larger spans, posts, headers, outdoor structures, and exposed framing where member size and grade both matter.'
 
@@ -177,15 +241,9 @@ const beamGradeTooltip =
   '#1 timbers are usually cleaner and stronger than #2, while #2 can be a practical value choice when the project design allows it. Some sizes are stocked only in #1 because that is the common mill and distributor offering for that size/species combination.'
 
 const beamRows = [
-  ['beam-4x6x8', '4x6-8 #1 Fir Beam', '4 in x 6 in x 8 ft', '#1 Fir', 37.5, 18],
-  ['beam-4x6x10', '4x6-10 #1 Fir Beam', '4 in x 6 in x 10 ft', '#1 Fir', 46.9, 14],
-  ['beam-4x6x12', '4x6-12 #1 Fir Beam', '4 in x 6 in x 12 ft', '#1 Fir', 56.25, 12],
-  ['beam-4x8x12', '4x8-12 #1 Fir Beam', '4 in x 8 in x 12 ft', '#1 Fir', 76.4, 9],
-  ['beam-6x6x8', '6x6-8 #1 Fir Timber', '6 in x 6 in x 8 ft', '#1 Fir', 72.95, 10],
-  ['beam-6x6x10', '6x6-10 #1 Fir Timber', '6 in x 6 in x 10 ft', '#1 Fir', 91.45, 8],
-  ['beam-6x6x12', '6x6-12 #1 Fir Timber', '6 in x 6 in x 12 ft', '#1 Fir', 109.95, 7],
-  ['beam-6x8x12', '6x8-12 #1 Fir Beam', '6 in x 8 in x 12 ft', '#1 Fir', 148.5, 5],
-  ['beam-6x8x16', '6x8-16 #2 Fir Beam', '6 in x 8 in x 16 ft', '#2 Fir', 168.75, 4],
+
+  ['1548', '6x6-8 #1 Fir Timber', '6 in x 6 in x 8 ft', '#1 Fir', 104.21, 6],
+  ['1558', '6x6-10 #1 Fir Timber', '6 in x 6 in x 10 ft', '#1 Fir', 130.26, 6],
 ]
 
 const beamProducts = beamRows.map(([id, name, dimensions, grade, price, stock]) => {
@@ -483,6 +541,7 @@ const holdownProducts = holdownRows.map(
 export const products = [
   ...fenceProducts,
   ...dimensionFramingLumberProducts,
+  ...pressureTreatedProducts,
   ...beamProducts,
   ...deckingProducts,
   ...concreteProducts,
@@ -1498,7 +1557,7 @@ export const products = [
     aliases: ['zip 5/8', 'zip 58', '5/8 zip'],
   },
   {
-    id: 'advantech-34-tg',
+    id: '829',
     name: 'AdvanTech 3/4 T&G Subfloor',
     category: 'Sheet Goods',
     dimensions: '3/4 in x 4 ft x 8 ft',
@@ -1515,7 +1574,7 @@ export const products = [
     aliases: ['advantech 3/4', 'advantech 34', 'advantech 3/4 t&g', 'advantech 34 tg'],
   },
   {
-    id: 'advantech-78-tg',
+    id: '877',
     name: 'AdvanTech 7/8 T&G Subfloor',
     category: 'Sheet Goods',
     dimensions: '7/8 in x 4 ft x 8 ft',

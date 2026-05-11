@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import AppHeader from './AppHeader'
 import ChatMessage from './ChatMessage'
 import DeliveryEstimator from './DeliveryEstimator'
+import Footer from './Footer'
 import ProductCard from './ProductCard'
 import QuoteDrawer from './QuoteDrawer'
 import SuggestedPrompts from './SuggestedPrompts'
@@ -564,17 +565,18 @@ function ChatHome() {
   const quoteCount = quoteItems.reduce((total, item) => total + item.quantity, 0)
 
   return (
-    <main className="flex h-screen flex-col overflow-hidden bg-white text-stone-950 md:bg-stone-50">
-      <AppHeader
-        catalogCount={catalogCount}
-        onMenuOpen={() => setIsMobileMenuOpen(true)}
-        onQuoteOpen={() => setIsQuoteOpen(true)}
-        quoteAnimationKey={quoteAnimationKey}
-        quoteCount={quoteCount}
-        quoteSubtotal={quoteSubtotal}
-      />
+    <main className="min-h-screen bg-white text-stone-950 md:bg-stone-50">
+      <div className="flex h-screen flex-col overflow-hidden">
+        <AppHeader
+          catalogCount={catalogCount}
+          onMenuOpen={() => setIsMobileMenuOpen(true)}
+          onQuoteOpen={() => setIsQuoteOpen(true)}
+          quoteAnimationKey={quoteAnimationKey}
+          quoteCount={quoteCount}
+          quoteSubtotal={quoteSubtotal}
+        />
 
-      <section className="mx-auto grid min-h-0 w-full max-w-7xl flex-1 gap-0 overflow-hidden px-0 py-0 sm:gap-5 sm:px-5 sm:py-5 md:overflow-y-auto xl:grid-cols-[minmax(0,1.12fr)_minmax(340px,.88fr)] xl:overflow-hidden 2xl:grid-cols-[minmax(0,1.15fr)_minmax(360px,.85fr)]">
+        <section className="mx-auto grid min-h-0 w-full max-w-7xl flex-1 gap-0 overflow-hidden px-0 py-0 sm:gap-5 sm:px-5 sm:py-5 md:overflow-y-auto xl:grid-cols-[minmax(0,1.12fr)_minmax(340px,.88fr)] xl:overflow-hidden 2xl:grid-cols-[minmax(0,1.15fr)_minmax(360px,.85fr)]">
         <div className="flex min-h-0 flex-col border-0 bg-white shadow-none sm:min-h-[560px] sm:rounded-lg sm:border sm:border-stone-200 sm:shadow-[0_1px_2px_rgb(0_0_0/0.04)] xl:min-h-0">
           <div className="hidden shrink-0 flex-col gap-3 border-b border-stone-100 p-4 sm:flex sm:flex-row sm:items-start sm:justify-between sm:gap-4 sm:p-5">
             <div>
@@ -695,7 +697,9 @@ function ChatHome() {
             </div>
           )}
         </aside>
-      </section>
+        </section>
+      </div>
+      <Footer />
       {isMobileMenuOpen ? (
         <div
           className="fixed inset-0 z-50 bg-stone-950/45 md:hidden"
