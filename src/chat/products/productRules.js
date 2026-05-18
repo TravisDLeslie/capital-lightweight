@@ -1,5 +1,5 @@
-import { normalizeQuery } from '../utils/productSearch.js'
-import { getAvailability } from '../utils/availability.js'
+import { getAvailability } from '../../utils/availability.js'
+import { normalizeQuery } from './productSearch.js'
 
 function allProductsAre(products, category) {
   return products.every((product) => product.category === category)

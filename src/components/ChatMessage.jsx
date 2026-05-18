@@ -67,7 +67,7 @@ function ChatMessage({
           isProductOptions ? 'w-full max-w-full' : 'max-w-[92%] sm:max-w-[88%]'
         } rounded-lg px-3 py-3 text-sm leading-6 break-words sm:px-4 ${
           isCustomer
-            ? 'bg-stone-700 text-white'
+            ? 'bg-stone-500 text-white'
             : 'border border-stone-200 bg-white text-stone-800'
         }`}
       >
@@ -92,7 +92,7 @@ function ChatMessage({
             {renderMessageText(message.text, !isCustomer)}
             {message.link ? (
               <a
-                className="mt-3 inline-flex rounded-md bg-[#FC2C38] px-3 py-2 text-sm font-bold text-white transition hover:bg-[#de1f2b] focus:outline-none focus:ring-4 focus:ring-red-200"
+                className="mt-3 inline-flex rounded-md bg-[#1E1E1E] px-3 py-2 text-sm font-bold text-white transition hover:bg-[#de1f2b] focus:outline-none focus:ring-4 focus:ring-red-200"
                 href={message.link.url}
                 rel="noreferrer"
                 target="_blank"

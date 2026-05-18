@@ -1,5 +1,5 @@
-import { getAvailability } from '../utils/availability.js'
-import { normalizeQuery } from '../utils/productSearch.js'
+import { getAvailability } from '../../utils/availability.js'
+import { normalizeQuery } from './productSearch.js'
 
 function getRedwoodProducts(products) {
   return products.filter((product) => normalizeQuery(product.name).includes('redwood'))

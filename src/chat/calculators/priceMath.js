@@ -1,4 +1,4 @@
-import { normalizeQuery } from '../utils/productSearch.js'
+import { normalizeQuery } from '../products/productSearch.js'
 
 const numberWords = {
   one: 1,

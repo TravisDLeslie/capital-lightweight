@@ -1,3 +1,5 @@
+import { deliveryAreas } from '../chat/data/deliveryAreas.js'
+
 export const deliveryZones = {
   83702: { city: 'Boise', dumped: 40, forklift: 50, hand: 60, handTwo: 100 },
   83703: { city: 'Boise', dumped: 40, forklift: 50, hand: 60, handTwo: 100 },
@@ -84,6 +86,16 @@ export function findDeliveryCity(prompt, normalizeQuery) {
   )
 }
 
+export function findDeliveryArea(prompt, normalizeQuery) {
+  const normalizedPrompt = normalizeQuery(prompt)
+
+  return (
+    deliveryAreas.find((area) =>
+      area.aliases.some((alias) => normalizedPrompt.includes(normalizeQuery(alias))),
+    ) || null
+  )
+}
+
 export function getDeliveryCityEstimate(cityName) {
   const cityZones = Object.values(deliveryZones).filter((zone) =>
     zone.city.toLowerCase().includes(cityName.toLowerCase()),
@@ -104,7 +116,7 @@ export function getDeliveryPriceText(zone) {
 
 export function getFreeStandardDeliveryNote(zipCode) {
   if (!zipCode || freeStandardDeliveryZips.includes(String(zipCode))) {
-    return '**If your ZIP code is 83702 or 83703, standard delivery is FREE on orders over $750.**'
+    return '**If your zip code is 83702 or 83703, standard delivery is FREE on all orders over $750.**'
   }
 
   return ''

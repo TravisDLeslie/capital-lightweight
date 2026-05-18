@@ -10,12 +10,12 @@ import {
   continueDeckingCalculator,
   isDeckingCalculatorStart,
   startDeckingCalculator,
-} from '../chat/deckingCalculator'
+} from '../chat/calculators/deckingCalculator'
 import {
   continueFenceCalculator,
   isFenceCalculatorStart,
   startFenceCalculator,
-} from '../chat/fenceCalculator'
+} from '../chat/calculators/fenceCalculator'
 import { getChatReply } from '../chat/replyEngine'
 import { products } from '../data/products'
 import { getQuoteSubtotal } from '../utils/quoteTotals'
@@ -39,12 +39,14 @@ const suggestedPrompts = [
 const replyCharacterDelay = 18
 const productRevealDelay = 450
 const defaultProduct =
+  products.find((product) => product.stockSku === '01' || product.id === '01') ||
+  products.find((product) => product.name === '2x4-8 #1 DF-L') ||
   products.find(
     (product) =>
-      product.id === '01' ||
-      product.name === '2x4-8 #1 DF-L' ||
-      product.aliases?.includes('2x4-8'),
-  ) || products[0]
+      product.aliases?.includes('2x4-8') &&
+      !product.name.toLowerCase().includes('treated'),
+  ) ||
+  products[0]
 const defaultQuoteSection = { id: 'general', name: 'General Materials' }
 
 function ChatHome() {
@@ -264,7 +266,7 @@ function ChatHome() {
     setIsAwaitingDeliveryLocation(Boolean(reply.deliveryPrompt))
   }
 
-  function submitPrompt(prompt) {
+  async function submitPrompt(prompt) {
     const cleanPrompt = prompt.trim()
 
     if (!cleanPrompt) {
@@ -379,7 +381,7 @@ function ChatHome() {
     const replyPrompt = shouldUseDeliveryFollowUp(cleanPrompt)
       ? `delivery to ${cleanPrompt}`
       : cleanPrompt
-    const reply = getChatReply(replyPrompt, products)
+    const reply = await getChatReply(replyPrompt, products)
 
     trackSessionEvent({
       eventType: 'chat_prompt',

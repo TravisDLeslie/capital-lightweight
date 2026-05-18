@@ -39,7 +39,7 @@ function AppHeader({
               className="h-6 w-auto shrink-0"
               src="/site-logo.svg"
             />
-            <span className="truncate text-sm font-black text-stone-950">
+            <span className="truncate text-xs font-black text-stone-950">
               Lumber Assistant
             </span>
           </button>
@@ -61,14 +61,14 @@ function AppHeader({
         <div className="flex min-w-0 flex-col items-center gap-3 text-center sm:flex-row sm:text-left">
           <img
             alt="Capital Lumber Co"
-            className="h-12 w-auto max-w-[250px] shrink-0 sm:h-14 xl:h-16"
+            className="h-8 w-auto max-w-[250px] shrink-0 sm:h-12 xl:h-12"
             src="/site-logo.svg"
           />
           <div className="min-w-0">
-            <h1 className="text-base font-black leading-tight text-stone-950 sm:text-lg">
+            <h1 className="text-sm font-black leading-tight text-stone-950 sm:text-lg">
               The Highest Quality Lumber & Building Materials
             </h1>
-            <p className="mt-1 text-sm font-semibold text-stone-600">
+            <p className="mt-1 text-xs font-semibold text-stone-600">
               Truck and trailer drive-through yard in Boise
             </p>
           </div>
@@ -102,7 +102,7 @@ function AppHeader({
           </div>
 
           <div className="flex w-full flex-col items-stretch gap-3 sm:w-auto sm:flex-row sm:items-center sm:justify-center xl:justify-end">
-            <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 rounded-lg bg-stone-50 px-3 py-2 text-sm font-semibold text-stone-700 ring-1 ring-stone-200 sm:justify-start">
+            <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 rounded-lg bg-stone-50 px-3 py-2 text-xs font-semibold text-stone-700 ring-1 ring-stone-200 sm:justify-start">
               <a
                 className="text-stone-950 underline-offset-4 transition hover:text-[#FC2C38] hover:underline"
                 href="tel:2083435481"

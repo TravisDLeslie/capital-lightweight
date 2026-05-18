@@ -1,103 +1,57 @@
-import { findProduct, findProductMatches } from '../utils/productSearch.js'
-import { getGeneralQuestionReply } from './generalQuestions.js'
-import { getKnowledgeReply } from './knowledgeRules.js'
-import { getPriceCalculation } from './priceMath.js'
-import {
-  getFoundReplyText,
-  getNotFoundReplyText,
-  getRecommendationProducts,
-} from './productRules.js'
+import { getCalculatorReply } from './calculators/index.js'
+import { getIntentReply } from './intents/index.js'
+import { getLLMReply } from './llm/llmReply.js'
+import { getProductReply } from './products/index.js'
+import { normalizePrompt } from './utils/normalizePrompt.js'
 
-export function getChatReply(prompt, products) {
-  const cleanPrompt = prompt.trim()
-  const generalQuestionReply = getGeneralQuestionReply(cleanPrompt)
-
-  if (generalQuestionReply) {
-    return {
-      kind: 'general',
-      deliveryPrompt: generalQuestionReply.deliveryPrompt,
-      image: generalQuestionReply.image,
-      text: generalQuestionReply.text,
-      link: generalQuestionReply.link,
-      products: [],
-      quoteLines: [],
-      selectedProduct: null,
-      showAllInitially: false,
-    }
-  }
-
-  const productKnowledgeReply = getKnowledgeReply(cleanPrompt, products)
-
-  if (productKnowledgeReply) {
-    return {
-      kind: 'product-knowledge',
-      text: productKnowledgeReply.text,
-      products: productKnowledgeReply.products,
-      quoteLines: [],
-      selectedProduct: null,
-      showAllInitially: true,
-    }
-  }
-
-  const product = findProduct(cleanPrompt, products)
-  const matches = findProductMatches(cleanPrompt, products)
-  const matchedProducts = matches.length ? matches : product ? [product] : []
-  const priceCalculation = getPriceCalculation(cleanPrompt, products, matchedProducts)
-
-  if (matchedProducts.length) {
-    const isMultipleMatch = matchedProducts.length > 1
-    const replyProducts = priceCalculation
-      ? priceCalculation.products
-      : matchedProducts
-
-    return {
-      kind: isMultipleMatch && !priceCalculation ? 'multiple-match' : 'exact-match',
-      text: priceCalculation
-        ? `${priceCalculation.text} I pulled that item up below so you can double-check stock and details.`
-        : getFoundReplyText(cleanPrompt, matchedProducts),
-      products: replyProducts,
-      selectedProduct: priceCalculation
-        ? priceCalculation.product
-        : isMultipleMatch
-          ? null
-          : matchedProducts[0],
-      quoteLines: priceCalculation
-        ? priceCalculation.lines.map((line) => ({
-            product: line.product,
-            quantity: line.quantity,
-          }))
-        : [],
-      showAllInitially: cleanPrompt.toLowerCase().includes('osb'),
-    }
-  }
-
-  const recommendations = getRecommendationProducts(cleanPrompt, products)
-  const recommendationCalculation = getPriceCalculation(
-    cleanPrompt,
-    products,
-    recommendations,
-  )
-
-  if (recommendationCalculation) {
-    return {
-      kind: 'exact-match',
-      text: `${recommendationCalculation.text} I picked the closest matching stocked item for that math.`,
-      products: recommendationCalculation.products,
-      quoteLines: recommendationCalculation.lines.map((line) => ({
-        product: line.product,
-        quantity: line.quantity,
-      })),
-      selectedProduct: recommendationCalculation.product,
-      showAllInitially: false,
-    }
-  }
+function normalizeReply(reply) {
+  if (!reply) return null
 
   return {
-    kind: 'recommendation',
-    text: getNotFoundReplyText(cleanPrompt, recommendations),
-    products: recommendations,
+    ...reply,
+    kind: reply.kind || 'general',
+    text: reply.text || '',
+    deliveryPrompt: reply.deliveryPrompt || false,
+    image: reply.image || null,
+    link: reply.link || null,
+    products: reply.products || [],
+    quoteLines: reply.quoteLines || [],
+    selectedProduct: reply.selectedProduct || null,
+  }
+}
+
+export function getFallbackReply(prompt = '') {
+  console.log('Unknown prompt:', prompt)
+
+  return {
+    kind: 'fallback',
+    text: "I'm not totally sure I understood that, but I can help. Ask about products, delivery, estimating, contractor support, or text photos/questions to 208-991-9970.",
+    deliveryPrompt: false,
+    image: null,
+    link: null,
+    products: [],
     quoteLines: [],
     selectedProduct: null,
-    showAllInitially: false,
   }
+}
+
+export async function getChatReply(prompt, products = [], context = {}) {
+  const cleanPrompt = normalizePrompt(prompt)
+
+  const calculatorReply = getCalculatorReply(cleanPrompt)
+  if (calculatorReply) return normalizeReply(calculatorReply)
+
+  const intentReply = getIntentReply(cleanPrompt, {
+    ...context,
+    products,
+  })
+  if (intentReply) return normalizeReply(intentReply)
+
+  const productReply = getProductReply(cleanPrompt, products)
+  if (productReply) return normalizeReply(productReply)
+
+  const llmReply = await getLLMReply(cleanPrompt, context)
+  if (llmReply) return normalizeReply(llmReply)
+
+  return getFallbackReply(cleanPrompt)
 }
