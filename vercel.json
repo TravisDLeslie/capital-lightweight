@@ -1,7 +1,7 @@
 {
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/:path((?!api/|src/|@vite/|@react-refresh|node_modules/|assets/|product-images/|spec-sheets/|admin-samples/|favicon.svg|icons.svg|site-logo.svg|capital-history.avif).*)",
       "destination": "/index.html"
     }
   ]

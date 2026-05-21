@@ -18,6 +18,7 @@ import {
 } from '../chat/calculators/fenceCalculator'
 import { getChatReply } from '../chat/replyEngine'
 import { products } from '../data/products'
+import { trackChatMessage } from '../utils/chatMessageAnalytics'
 import { getQuoteSubtotal } from '../utils/quoteTotals'
 import { trackSessionEvent } from '../utils/sessionAnalytics'
 
@@ -287,6 +288,9 @@ function ChatHome() {
       const replyMessageId = crypto.randomUUID()
 
       if (lastQuoteLines.length) {
+        const assistantResponse = `Done. I added ${getQuoteLineSummary(lastQuoteLines)} to your quote.`
+
+        trackChatMessage(cleanPrompt, assistantResponse)
         addQuoteLinesToQuote(lastQuoteLines)
         setIsQuoteOpen(true)
         setMessages([
@@ -299,10 +303,14 @@ function ChatHome() {
         ])
         revealReplyText(
           replyMessageId,
-          `Done. I added ${getQuoteLineSummary(lastQuoteLines)} to your quote.`,
+          assistantResponse,
           () => {},
         )
       } else {
+        const assistantResponse =
+          'I do not have a recent priced item to add yet. Ask me for a price or quantity first, then I can add it to your quote.'
+
+        trackChatMessage(cleanPrompt, assistantResponse)
         setMessages([
           ...nextMessages,
           {
@@ -313,7 +321,7 @@ function ChatHome() {
         ])
         revealReplyText(
           replyMessageId,
-          'I do not have a recent priced item to add yet. Ask me for a price or quantity first, then I can add it to your quote.',
+          assistantResponse,
           () => {},
         )
       }
@@ -330,6 +338,7 @@ function ChatHome() {
 
     if (fenceCalculatorResult) {
       setDeckingCalculatorState(null)
+      trackChatMessage(cleanPrompt, fenceCalculatorResult.reply.text)
       trackSessionEvent({
         eventType: 'chat_prompt',
         prompt: cleanPrompt,
@@ -358,6 +367,7 @@ function ChatHome() {
 
     if (deckingCalculatorResult) {
       setFenceCalculatorState(null)
+      trackChatMessage(cleanPrompt, deckingCalculatorResult.reply.text)
       trackSessionEvent({
         eventType: 'chat_prompt',
         prompt: cleanPrompt,
@@ -383,6 +393,7 @@ function ChatHome() {
       : cleanPrompt
     const reply = await getChatReply(replyPrompt, products)
 
+    trackChatMessage(cleanPrompt, reply.text)
     trackSessionEvent({
       eventType: 'chat_prompt',
       prompt: cleanPrompt,
