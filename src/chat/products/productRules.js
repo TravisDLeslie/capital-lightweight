@@ -67,6 +67,10 @@ export function getFoundReplyText(prompt, matchedProducts) {
     const [product] = matchedProducts
     const availability = getAvailability(product)
 
+    if (product.category === 'Diablo Tools') {
+      return `Yes, we stock ${product.name}. I pulled it up below with the model number, UPC, and current price so you can confirm the exact Diablo item.`
+    }
+
     if (availability.type === 'lead-time') {
       return `We do not stock ${product.name} in the yard, but it is available with a ${availability.label}. I pulled it up below so you can see the details.`
     }
@@ -118,6 +122,10 @@ export function getFoundReplyText(prompt, matchedProducts) {
 
   if (allProductsAre(matchedProducts, 'Concrete & Sacked Goods')) {
     return 'Yes, we stock concrete and sacked goods. We carry 60 lb and 80 lb 4000 PSI ready mix, plus a 50 lb fast-setting ready mix when the job needs a quicker set.'
+  }
+
+  if (allProductsAre(matchedProducts, 'Diablo Tools')) {
+    return 'Yes, we carry Diablo tools and accessories. You can search these by Diablo item number, UPC, or product name, and I pulled the closest Diablo matches below.'
   }
 
   return 'Yes, we stock a few options that match that ask. Here are the closest products I found.'
@@ -211,6 +219,19 @@ export function getRecommendationProducts(prompt, products) {
   ) {
     return products
       .filter((product) => product.category === 'Concrete & Sacked Goods')
+      .slice(0, 4)
+  }
+
+  if (
+    normalizedPrompt.includes('diablo') ||
+    normalizedPrompt.includes('sawzall') ||
+    normalizedPrompt.includes('reciprocating') ||
+    normalizedPrompt.includes('oscillatingblade') ||
+    normalizedPrompt.includes('holesaw') ||
+    normalizedPrompt.includes('drillbit')
+  ) {
+    return products
+      .filter((product) => product.category === 'Diablo Tools')
       .slice(0, 4)
   }
 

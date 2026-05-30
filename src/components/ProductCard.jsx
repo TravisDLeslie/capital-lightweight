@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { getAvailability } from '../utils/availability'
+import { getInternalSku } from '../utils/productCodes'
 import { getPriceVerificationLabel } from '../utils/priceVerification'
 
 function ProductCard({
@@ -11,7 +12,7 @@ function ProductCard({
   const [isAddAnimating, setIsAddAnimating] = useState(false)
   const [isGradeOpen, setIsGradeOpen] = useState(true)
   const [isImageOpen, setIsImageOpen] = useState(false)
-  const internalSku = product.stockSku || product.id.toUpperCase()
+  const internalSku = getInternalSku(product)
   const availability = getAvailability(product)
   const priceVerificationLabel = getPriceVerificationLabel(product)
 
@@ -52,7 +53,7 @@ function ProductCard({
                   className={`rounded px-2 py-1 text-xs font-semibold ${availability.chipClass}`}
                 >
                   {availability.type === 'in-stock'
-                    ? `${product.stock} in stock`
+                    ? product.stockLabel || `${product.stock} in stock`
                     : availability.label}
                 </span>
                 <button
@@ -77,9 +78,11 @@ function ProductCard({
               <p className="mt-1 text-sm text-stone-600">
                 {product.dimensions} | {product.grade}
               </p>
-              <p className="mt-2 text-[11px] font-medium uppercase tracking-wide text-stone-400">
-                Internal SKU: {internalSku}
-              </p>
+              <div className="mt-2 space-y-1 text-[11px] font-medium uppercase tracking-wide text-stone-400">
+                {internalSku ? <p>Internal SKU: {internalSku}</p> : null}
+                {product.modelNumber ? <p>Model #: {product.modelNumber}</p> : null}
+                {product.upc ? <p>UPC: {product.upc}</p> : null}
+              </div>
               {product.specSheet ? (
                 <div className="mt-3 flex flex-wrap gap-2">
                   <a

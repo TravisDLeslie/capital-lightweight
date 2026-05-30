@@ -1,8 +1,11 @@
 import { accountIntent } from './accountIntent.js'
+import { accountingIntent } from './accountingIntent.js'
+import { cdxIntent } from './cdxIntent.js'
 import { comparisonIntent } from './comparisonIntent.js'
 import { contactIntent } from './contactIntent.js'
 import { contractorIntent } from './contractorIntent.js'
 import { deliveryIntent } from './deliveryIntent.js'
+import { doorWindowIntent } from './doorWindowIntent.js'
 import { estimatingIntent } from './estimatingIntent.js'
 import { greetingIntent } from './greetingIntent.js'
 import { hoursIntent } from './hoursIntent.js'
@@ -25,6 +28,9 @@ const intents = [
   deliveryIntent,
   hoursIntent,
   contactIntent,
+  accountingIntent,
+  doorWindowIntent,
+  cdxIntent,
   orderingIntent,
   estimatingIntent,
   textSupportIntent,

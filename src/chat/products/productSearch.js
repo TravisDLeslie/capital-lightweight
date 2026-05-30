@@ -25,7 +25,7 @@ export function normalizeQuery(value) {
 }
 
 function getProductSku(product) {
-  return String(product.stockSku || product.id || '').toLowerCase()
+  return String(product.stockSku || product.modelNumber || product.id || '').toLowerCase()
 }
 
 function isTreatedPrompt(normalizedQuery) {
@@ -57,6 +57,32 @@ function getMatchPreferenceScore(product, normalizedQuery) {
   if (product.category === 'Dimensional Lumber') score += 8
 
   return score
+}
+
+function getSearchableProductText(product) {
+  return [
+    product.name,
+    product.category,
+    product.dimensions,
+    product.grade,
+    product.modelNumber,
+    product.upc,
+    ...(product.aliases || []),
+  ]
+    .map((value) => normalizeQuery(String(value || '')))
+    .join(' ')
+}
+
+function getDiabloMatchesByTerms(products, terms) {
+  return products.filter((product) => {
+    if (product.category !== 'Diablo Tools') {
+      return false
+    }
+
+    const searchableText = getSearchableProductText(product)
+
+    return terms.some((term) => searchableText.includes(term))
+  })
 }
 
 function findSkuProduct(query, products) {
@@ -178,6 +204,7 @@ export function findProductMatches(query, products) {
     'bagconcrete',
     'baggedconcrete',
   ]
+  const broadDiabloTerms = ['diablo', 'diablotools']
   const broadTerms = [
     ...broadSheetGoodsTerms,
     ...broadHardwareTerms,
@@ -186,6 +213,7 @@ export function findProductMatches(query, products) {
     ...broadBeamTerms,
     ...broadDeckingTerms,
     ...broadConcreteTerms,
+    ...broadDiabloTerms,
   ]
   const isBroadHardwareQuery = broadHardwareTerms.some((term) =>
     normalizedQuery.includes(term),
@@ -193,6 +221,27 @@ export function findProductMatches(query, products) {
   const isBroadHoldownQuery = broadHoldownTerms.some((term) =>
     normalizedQuery.includes(term),
   )
+  const isBroadDiabloQuery = broadDiabloTerms.some((term) =>
+    normalizedQuery.includes(term),
+  )
+
+  if (
+    isBroadDiabloQuery &&
+    ['diablo', 'diablotools'].includes(normalizedQuery)
+  ) {
+    return products.filter((product) => product.category === 'Diablo Tools')
+  }
+
+  if (normalizedQuery.includes('holesaw') || normalizedQuery.includes('holesaws')) {
+    const holeSawMatches = getDiabloMatchesByTerms(products, [
+      'holesaw',
+      'holesaws',
+    ])
+
+    if (holeSawMatches.length) {
+      return holeSawMatches
+    }
+  }
 
   if (isBroadHoldownQuery) {
     const genericHoldownAliases = new Set([
@@ -283,7 +332,8 @@ export function findProductMatches(query, products) {
       .filter(({ normalizedAlias }) => {
         return (
           !broadTerms.includes(normalizedAlias) &&
-          normalizedQuery.includes(normalizedAlias)
+          (normalizedQuery.includes(normalizedAlias) ||
+            normalizedAlias.includes(normalizedQuery))
         )
       })
   })
@@ -341,6 +391,10 @@ export function findProductMatches(query, products) {
 
   if (isBroadConcreteQuery) {
     return products.filter((product) => product.category === 'Concrete & Sacked Goods')
+  }
+
+  if (isBroadDiabloQuery) {
+    return products.filter((product) => product.category === 'Diablo Tools')
   }
 
   if (normalizedQuery.includes('zip')) {

@@ -7,6 +7,10 @@ const availabilityStyles = {
     detailTitle: 'Ready for pickup',
     detailText: 'Delivery available',
     listText(product) {
+      if (product.stockLabel) {
+        return product.stockLabel
+      }
+
       return `${product.stock} pcs available`
     },
     priceFallback: 'Ask',
@@ -47,6 +51,7 @@ export function getAvailability(product) {
   const style = availabilityStyles[type] || availabilityStyles['in-stock']
   const label =
     product.availability?.label ||
+    product.stockLabel ||
     product.leadTime ||
     (type === 'in-stock' ? 'In stock' : 'Available by order')
 

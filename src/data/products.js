@@ -1,3 +1,5 @@
+import { diabloProducts } from './diabloProducts.js'
+
 const engineeredGradeNote =
   'Engineered lumber is manufactured for predictable strength and dimensional stability, making it useful for long spans, beams, headers, and floor systems.'
 
@@ -1978,5 +1980,6 @@ export const products = [
     image: '/product-images/simpson/a35z.jpg',
     aliases: ['a35', 'a35z', 'framing angle', 'simpson angle'],
   },
+  ...diabloProducts,
   ...engineeredProducts,
 ]

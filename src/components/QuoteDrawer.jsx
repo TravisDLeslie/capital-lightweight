@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { downloadMaterialListPdf } from '../utils/materialListPdf'
+import { getProductCodes } from '../utils/productCodes'
 import {
   getQuoteSubtotal,
   getQuoteTax,
@@ -176,8 +177,7 @@ function QuoteDrawer({
 
                     {section.items.map((item) => {
                       const isDelivery = item.product.category === 'Delivery'
-                      const internalSku =
-                        item.product.stockSku || item.product.id.toUpperCase()
+                      const productCodes = getProductCodes(item.product)
 
                       return (
                         <div
@@ -197,10 +197,12 @@ function QuoteDrawer({
                               <p className="mt-1 text-sm text-stone-600">
                                 ${item.product.price.toFixed(2)} / {item.product.unit}
                               </p>
-                              {!isDelivery ? (
-                                <p className="mt-1 text-[11px] font-semibold uppercase tracking-wide text-stone-400">
-                                  SKU: {internalSku}
-                                </p>
+                              {!isDelivery && productCodes.length ? (
+                                <div className="mt-1 space-y-0.5 text-[11px] font-semibold uppercase tracking-wide text-stone-400">
+                                  {productCodes.map((code) => (
+                                    <p key={code.label}>{code.label}: {code.value}</p>
+                                  ))}
+                                </div>
                               ) : null}
                               {isDelivery ? (
                                 <p className="mt-1 text-xs font-semibold text-stone-500">

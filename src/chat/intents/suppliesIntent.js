@@ -44,6 +44,11 @@ export const suppliesIntent = {
     'wood screws',
     'lags',
   ],
+  shouldSkip(prompt) {
+    const text = prompt.toLowerCase()
+
+    return text.includes('diablo')
+  },
   getReply(prompt) {
     const text = prompt.toLowerCase()
 
